@@ -16,7 +16,10 @@ function App() {
     <Layout>
       <Router>
         <Switch>
-          <Route exact path="/">
+        <Route exact path="/">
+            <UploadPage />
+          </Route>
+          <Route exact path="/login">
             <Login />
           </Route>
           <Route exact path="/create">
@@ -24,9 +27,6 @@ function App() {
           </Route>
           <Route exact path="/results">
             <PastResults />
-          </Route>
-          <Route exact path="/detect">
-            <UploadPage />
           </Route>
         </Switch>
       </Router>
