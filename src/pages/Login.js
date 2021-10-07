@@ -23,7 +23,7 @@ function Login({ history }) {
 						<Form.Group>
 							<Form.Label>Password </Form.Label>
 							<Form.Control type="password" required />
-							<a href="#">Forgot my password</a>
+							<a href="/">Forgot my password</a>
 						</Form.Group>
 
 						<Button type="submit" variant="primary">Log In</Button>
