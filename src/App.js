@@ -8,6 +8,8 @@ import CreateAccount from "./pages/CreateAccount";
 import PastResults from "./pages/PastResults";
 import UploadPage from "./pages/UploadPage";
 import Layout from "./components/Layout";
+import TermsOfService from "./pages/TermsOfService";
+import Profile from "./pages/Profile";
 
 library.add(fas);
 
@@ -24,6 +26,15 @@ function App() {
           </Route>
           <Route exact path="/results">
             <PastResults />
+          </Route>
+          <Route exact path="/detect">
+            <UploadPage />
+          </Route>
+          <Route exact path="/tos">
+            <TermsOfService />
+          </Route>
+          <Route exact path="/profile">
+            <Profile />
           </Route>
           <Route exact path="/detect">
             <UploadPage />
