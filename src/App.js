@@ -18,7 +18,7 @@ function App() {
     <Layout>
       <Router>
         <Switch>
-        <Route exact path="/">
+          <Route exact path="/">
             <UploadPage />
           </Route>
           <Route exact path="/login">
@@ -38,9 +38,6 @@ function App() {
           </Route>
           <Route exact path="/profile">
             <Profile />
-          </Route>
-          <Route exact path="/detect">
-            <UploadPage />
           </Route>
         </Switch>
       </Router>
