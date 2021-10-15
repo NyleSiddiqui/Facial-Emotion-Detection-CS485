@@ -18,7 +18,10 @@ function App() {
     <Layout>
       <Router>
         <Switch>
-          <Route exact path="/">
+        <Route exact path="/">
+            <UploadPage />
+          </Route>
+          <Route exact path="/login">
             <Login />
           </Route>
           <Route exact path="/create">
