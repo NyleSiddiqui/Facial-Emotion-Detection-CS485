@@ -2,20 +2,29 @@ import React, { useRef, useState, useCallback } from "react";
 import Dropzone from "react-dropzone";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
+import Modal from "react-bootstrap/Modal";
 import Webcam from "react-webcam";
 import { withRouter } from "react-router-dom";
-import Button from "react-bootstrap/Button";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function UploadPage() {
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
+  const [alert, setAlert] = useState(null);
   const inputFileRef = useRef(null);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const onFileChange = (e) => {
     setImgSrc(URL.createObjectURL(e.target.files[0]));
   };
-  const onBtnClick = () => {
+
+  const handleUploadFile = () => {
     inputFileRef.current.click();
   };
 
@@ -28,22 +37,34 @@ function UploadPage() {
     setImgSrc(URL.createObjectURL(file[0]));
   };
 
+  const handleDetect = () => {
+    handleShow();
+    //setAlert("There was an error");
+  };
+
   return (
     <>
-      <Row>
-        <Col>
+      {alert && (
+        <Alert variant="danger" onClose={() => setAlert(null)} dismissible>
+          The model was unable to detect an emotion from your image. Please
+          upload a new one.
+        </Alert>
+      )}
+
+      <Row className="mt-3">
+        <Col lg={6}>
           <div className="upload-container m-auto">
             <Webcam
               audio={false}
               ref={webcamRef}
               screenshotFormat="image/jpeg"
             />
-            <Button variant="primary" onClick={capture}>
+            <Button className="mt-2 w-50" variant="primary" onClick={capture}>
               Capture Image
             </Button>
           </div>
         </Col>
-        <Col md={6}>
+        <Col lg={6}>
           <div className="upload-container">
             <div className="drop-container">
               {imgSrc ? (
@@ -74,10 +95,34 @@ function UploadPage() {
               onChange={onFileChange}
               style={{ display: "none" }}
             />
-            <Button className="mt-2" variant="primary" onClick={onBtnClick}>
+            <Button
+              className="w-50 mt-2"
+              variant="primary"
+              onClick={handleUploadFile}
+            >
               {imgSrc ? "Reupload" : "Upload"} file
             </Button>
           </div>
+
+          <Modal show={show} onHide={handleClose} size="xl">
+            <Modal.Header closeButton>
+              <Modal.Title>Modal heading</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              Woohoo, you're reading this text in a modal!
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Close
+              </Button>
+              <Button variant="primary" onClick={handleClose}>
+                Save Changes
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </Col>
+        <Col className="mt-5 d-flex justify-content-center" xs={12}>
+          <Button onClick={handleDetect}>Detect Emotion</Button>
         </Col>
       </Row>
     </>
