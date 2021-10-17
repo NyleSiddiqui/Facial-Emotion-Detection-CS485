@@ -5,9 +5,9 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import Modal from "react-bootstrap/Modal";
+import Image from "react-bootstrap/Image";
 import Webcam from "react-webcam";
 import { withRouter } from "react-router-dom";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function UploadPage() {
@@ -109,7 +109,14 @@ function UploadPage() {
               <Modal.Title>Emotion Detected!</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              Woohoo, you're reading this text in a modal!
+              <Row>
+                <Col md={6}>
+                  <Image fluid src={imgSrc} />
+                </Col>
+                <Col md={6}>
+                  <Image fluid src={imgSrc} />
+                </Col>
+              </Row>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
