@@ -16,7 +16,7 @@ const Footer = () => {
           <Nav.Link href='/privacy_policy'>Privacy Policy</Nav.Link>
         </Nav>
         <Nav className='footer-item'>
-          <img src={ CopyRightImg } alt='Copyright Image' />
+          <img src={ CopyRightImg } alt='Copyright' />
           <div id='copyright-date'>10/18/2021</div>
         </Nav>
       </Container>
