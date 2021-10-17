@@ -7,6 +7,7 @@ import Alert from "react-bootstrap/Alert";
 import Modal from "react-bootstrap/Modal";
 import Image from "react-bootstrap/Image";
 import Webcam from "react-webcam";
+import Happy from "../images/sample/happy.jpg";
 import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -111,10 +112,11 @@ function UploadPage() {
             <Modal.Body>
               <Row>
                 <Col md={6}>
-                  <Image fluid src={imgSrc} />
+                  <Image fluid src={Happy} />
                 </Col>
-                <Col md={6}>
-                  <Image fluid src={imgSrc} />
+                <Col className="m-auto text-center" md={6}>
+                  <h3>The following emotion was detected:</h3>
+                  <h1 className="huge">Happy</h1>
                 </Col>
               </Row>
             </Modal.Body>
