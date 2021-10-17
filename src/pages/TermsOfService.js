@@ -2,7 +2,11 @@ import React from "react";
 import Container from "react-bootstrap/Container";
 
 const TermsOfService = () => {
-  return <Container>{<div> Hello!</div>}</Container>;
+  return (
+    <div>
+      
+    </div>
+  )
 };
 
 export default TermsOfService;

@@ -1915,6 +1915,18 @@
   dependencies:
     "@babel/runtime" "^7.6.2"
 
+"@react-pdf-viewer/core@2.9.1":
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/core/-/core-2.9.1.tgz#7666b39de51a66fe5208b8c162956d2f34faee25"
+  integrity sha512-WMl1VpPv93TIOxs3nmFLnJ/jwVL+06DB1RCsn86uvucTr///RRk4qfBg+o4IszC58nLCJgJbKhCilmQJnRtAYg==
+
+"@react-pdf-viewer/get-file@^2.9.1":
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/get-file/-/get-file-2.9.1.tgz#1955c946efdedb21d978e7add4f05f9c2149e5cc"
+  integrity sha512-hgQvwFgTwi/jysdPrFaLjScewSR3Qy3rxEdr9GzIQBZhkMOHS2K46h7CazbdCxmsecX2D7d3yo421vY38jMe/A==
+  dependencies:
+    "@react-pdf-viewer/core" "2.9.1"
+
 "@restart/context@^2.1.4":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@restart/context/-/context-2.1.4.tgz#a99d87c299a34c28bd85bb489cb07bfd23149c02"
@@ -8673,6 +8685,11 @@ pbkdf2@^3.0.3:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+pdfjs-dist@2.6.347:
+  version "2.6.347"
+  resolved "https://registry.yarnpkg.com/pdfjs-dist/-/pdfjs-dist-2.6.347.tgz#f257ed66e83be900cd0fd28524a2187fb9e25cd5"
+  integrity sha512-QC+h7hG2su9v/nU1wEI3SnpPIrqJODL7GTDFvR74ANKGq1AFJW16PH8VWnhpiTi9YcLSFV9xLeWSgq+ckHLdVQ==
+
 performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
@@ -11870,10 +11887,8 @@ watchpack@^1.7.4:
   resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-1.7.5.tgz#1267e6c55e0b9b5be44c2023aed5437a2c26c453"
   integrity sha512-9P3MWk6SrKjHsGkLT2KHXdQ/9SNkyoJbabxnKOoJepsvJjJG8uYTR3yTPxPQvNDI3w4Nz1xnE0TLHK4RIVe/MQ==
   dependencies:
-    chokidar "^3.4.1"
     graceful-fs "^4.1.2"
     neo-async "^2.5.0"
-    watchpack-chokidar2 "^2.0.1"
   optionalDependencies:
     chokidar "^3.4.1"
     watchpack-chokidar2 "^2.0.1"
