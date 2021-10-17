@@ -1,20 +1,20 @@
 import React from "react";
 import MyNav from "./MyNav.js";
+import Footer from "./Footer.js";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import "../styles/Layout.css";
 
 const Layout = ({ children }) => {
   return (
     <>
-      <MyNav></MyNav>
-      <Container id = "container">
+      <MyNav />
+      <Container>
         <Row>
           <Col>{children}</Col>
         </Row>
       </Container>
-      
+      <Footer />
     </>
   );
 };
