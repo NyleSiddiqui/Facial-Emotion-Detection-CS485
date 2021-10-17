@@ -10,6 +10,7 @@ import UploadPage from "./pages/UploadPage";
 import Layout from "./components/Layout";
 import TermsOfService from "./pages/TermsOfService";
 import Profile from "./pages/Profile";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 library.add(fas);
 
@@ -35,6 +36,9 @@ function App() {
           </Route>
           <Route exact path="/profile">
             <Profile />
+          </Route>
+          <Route exact path="/privacy_policy">
+            <PrivacyPolicy />
           </Route>
         </Switch>
       </Router>
