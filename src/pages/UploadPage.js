@@ -106,7 +106,7 @@ function UploadPage() {
 
           <Modal show={show} onHide={handleClose} size="xl">
             <Modal.Header closeButton>
-              <Modal.Title>Modal heading</Modal.Title>
+              <Modal.Title>Emotion Detected!</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               Woohoo, you're reading this text in a modal!
@@ -114,9 +114,6 @@ function UploadPage() {
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
                 Close
-              </Button>
-              <Button variant="primary" onClick={handleClose}>
-                Save Changes
               </Button>
             </Modal.Footer>
           </Modal>
