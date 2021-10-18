@@ -16,33 +16,43 @@ library.add(fas);
 
 function App() {
   return (
-    <Layout>
-      <Router>
-        <Switch>
-          <Route exact path="/login">
-            <Login />
-          </Route>
-          <Route exact path="/create">
+    <Router>
+      <Switch>
+        <Route exact path="/login">
+          <Login />
+        </Route>
+        <Route exact path="/create">
+          <Layout>
             <CreateAccount />
-          </Route>
-          <Route exact path="/results">
+          </Layout>
+        </Route>
+        <Route exact path="/results">
+          <Layout>
             <PastResults />
-          </Route>
-          <Route exact path="/detect">
+          </Layout>
+        </Route>
+        <Route exact path="/detect">
+          <Layout>
             <UploadPage />
-          </Route>
-          <Route exact path="/tos">
+          </Layout>
+        </Route>
+        <Route exact path="/tos">
+          <Layout>
             <TermsOfService />
-          </Route>
-          <Route exact path="/profile">
+          </Layout>
+        </Route>
+        <Route exact path="/profile">
+          <Layout>
             <Profile />
-          </Route>
-          <Route exact path="/privacy_policy">
+          </Layout>
+        </Route>
+        <Route exact path="/privacy_policy">
+          <Layout>
             <PrivacyPolicy />
-          </Route>
-        </Switch>
-      </Router>
-    </Layout>
+          </Layout>
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 

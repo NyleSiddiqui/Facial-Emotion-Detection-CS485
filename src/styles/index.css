@@ -7,11 +7,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   /* Custom styles */
-<<<<<<< HEAD
-  background-color: #efefef;
-=======
   background-color: darkgray;
->>>>>>> master
 }
 
 code {
