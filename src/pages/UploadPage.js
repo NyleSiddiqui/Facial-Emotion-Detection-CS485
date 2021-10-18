@@ -115,8 +115,14 @@ function UploadPage() {
                   <Image fluid src={Happy} />
                 </Col>
                 <Col className="m-auto text-center" md={6}>
-                  <h3>The following emotion was detected:</h3>
-                  <h1 className="huge">Happy</h1>
+                  <h3 className="mb-0">The following emotion was detected:</h3>
+                  <h1 className="mt-0 huge">Happy</h1>
+                  <h4>80% accuracy</h4>
+                  <h3 className="mt-5">
+                    <strong>Other emotions detected:</strong>
+                  </h3>
+                  <h4>Excitement - 12%</h4>
+                  <h4>Anger - 8%</h4>
                 </Col>
               </Row>
             </Modal.Body>
