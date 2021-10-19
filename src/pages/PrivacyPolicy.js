@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import pdf from '../pdfs/privacy_policy.pdf';
+import { withRouter } from "react-router-dom";
 
 const PrivacyPolicy = () => {
   const [defaultPdfFile] = useState(pdf);
@@ -17,4 +18,4 @@ const PrivacyPolicy = () => {
   );
 };
 
-export default PrivacyPolicy;
+export default withRouter(PrivacyPolicy);

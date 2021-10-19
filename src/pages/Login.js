@@ -39,7 +39,7 @@ function Login({ history }) {
           <Button type="submit" variant="primary">
             Log In
           </Button>
-          <Button href="/create" variant="outline-secondary">
+          <Button href="/create" variant="outline-dark">
             Create an Account{" "}
             <FontAwesomeIcon
               icon={["fas", "arrow-right"]}

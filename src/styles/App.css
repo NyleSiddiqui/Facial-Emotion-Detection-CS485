@@ -82,7 +82,38 @@ body {
   align-items: center;
   flex-direction: column;
   min-width: 500px;
-  background-color: white;
+  background-color: rgb(212, 212, 212);;
   padding: 50px 0px;
   border-radius: 10px;
+}
+
+.verification-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-image: url("../images/background.jpg");
+  background-size: cover;
+}
+
+.verification {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-width: 400px;
+  min-height: 300px;
+  background-color: rgb(212, 212, 212);
+  padding: 50px 0px;
+  border-radius: 10px;
+}
+
+#verification-paragraph {
+  font-size: 7mm;
+}
+
+#resend-btn {
+  font-size: 5mm;
 }

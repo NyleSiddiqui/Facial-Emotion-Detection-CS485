@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import { Worker, Viewer } from '@react-pdf-viewer/core';
+import pdf from '../pdfs/tos.pdf';
+import { withRouter } from "react-router-dom";
 
 const TermsOfService = () => {
+  const [defaultPdfFile] = useState(pdf);
+
   return (
     <div>
-      
+      <Worker 
+        workerUrl='https://unpkg.com/pdfjs-dist@2.6.347/build/pdf.worker.min.js'
+      >
+        <Viewer fileUrl = {defaultPdfFile} />
+      </Worker>
     </div>
-  )
+  );
 };
 
-export default TermsOfService;
+export default withRouter(TermsOfService);

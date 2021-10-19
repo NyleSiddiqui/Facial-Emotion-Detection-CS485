@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -11,13 +11,19 @@ import Layout from "./components/Layout";
 import TermsOfService from "./pages/TermsOfService";
 import Profile from "./pages/Profile";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import VerificationPage from "./pages/VerificationPage"
 
 library.add(fas);
 
 function App() {
+  const loggedIn = false;
+
   return (
     <Router>
       <Switch>
+        <Route exact path="/">
+          {loggedIn ? <Redirect to="/detect" /> : <Login />}
+        </Route>
         <Route exact path="/login">
           <Login />
         </Route>
@@ -50,6 +56,9 @@ function App() {
           <Layout>
             <PrivacyPolicy />
           </Layout>
+        </Route>
+        <Route exact path="/verification">
+          <VerificationPage />
         </Route>
       </Switch>
     </Router>
