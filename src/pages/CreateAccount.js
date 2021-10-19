@@ -64,7 +64,7 @@ function CreateAccount() {
               <Form.Label>
                 Password
                 <OverlayTrigger overlay={passwordTooltip}>
-                  <a href="/" style={{ marginLeft: ".5em" }}><FontAwesomeIcon
+                  <a href="/" className="ms-1"><FontAwesomeIcon
                         icon={["fas", "question-circle"]}
                         style={{ fontSize: "1em" }}
                       />
@@ -101,7 +101,7 @@ function CreateAccount() {
               <Form.Check
                 inline
                 required
-              /> I agree to the <a href="">Privacy Policy</a>
+              /> I agree to the <a href="/privacy_policy" target="_blank">Privacy Policy</a>
             </Form.Group>
           </Col>
         </Row>
