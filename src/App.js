@@ -28,9 +28,7 @@ function App() {
           <Login />
         </Route>
         <Route exact path="/create">
-          <Layout>
-            <CreateAccount />
-          </Layout>
+          <CreateAccount />
         </Route>
         <Route exact path="/results">
           <Layout>

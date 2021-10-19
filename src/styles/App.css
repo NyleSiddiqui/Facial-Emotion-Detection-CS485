@@ -66,7 +66,8 @@ body {
   align-items: center;
 }
 
-.login-container {
+.login-container,
+.create-account-container {
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -76,7 +77,8 @@ body {
   background-size: cover;
 }
 
-.login {
+.login,
+.create-account {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -116,4 +118,15 @@ body {
 
 #resend-btn {
   font-size: 5mm;
+}
+.create-account {
+  min-width: 700px;
+}
+
+.create-account h3 {
+  padding-bottom: .75em;
+}
+
+.create-account .btn-submit {
+  margin-top: .5em;
 }
