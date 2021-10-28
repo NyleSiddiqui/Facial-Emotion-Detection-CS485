@@ -1,7 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
+import { getAuth, setPersistence, browserSessionPersistence, signOut,signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -39,17 +40,20 @@ function createAccount(email, password) {
 function loginUser(email, password) {
   email = email['email']
   password = password['password']
-  signInWithEmailAndPassword(auth, email, password).then(userCredential => {
-    console.log("Signed on!");
+  // setPersistence(auth, browserSessionPersistence).then(() => {
+  return new Promise((resolve, reject) => {
+    signInWithEmailAndPassword(auth, email, password).then(() => {
+      console.log("Signed In");
+      resolve()
+    });
   })
 }
 
 function setProfile(firstName, lastName, photoLink) {
   firstName = firstName['firstName']
   lastName = lastName['lastName']
-  photoLink = photoLink['photoLink']
     updateProfile(auth.currentUser, {
-      displayName: firstName + lastName, photoURL: photoLink
+      displayName: firstName + " " + lastName, photoURL: photoLink
     }).then(()=> {
       console.log("Profile Updated")
     })
@@ -66,7 +70,7 @@ function getProfile() {
   let profile = {}
   console.log(user)
   if(user) {
-    let names = user.displayName.split();
+    let names = user.displayName.split(' ');
     profile = {
       "firstName": names[0],
       "lastName": names[1],
@@ -108,6 +112,12 @@ function uploadProfilePhoto(file) {
   });
 }
 
+function logout() {
+  signOut(auth).then(() => {
+    console.log("Signed Out!")
+  });
+}
+
 
 export { loginUser, createAccount, verifyEmail, setProfile,
-   getProfile, uploadProfilePhoto};
+   getProfile, uploadProfilePhoto, logout};

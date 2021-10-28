@@ -6,15 +6,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Alert from "react-bootstrap/Alert";
 import {loginUser} from '../fire/fire'
 
+
 function Login({ history }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [alert, setAlert] = useState(null);
 
-  function login() {
-    console.log({email})
-    console.log({password})
-    loginUser({email}, {password})
+  function login(event) {
+    event.preventDefault()
+    loginUser({email}, {password}).then(() => {
+      history.push("/profile");
+    })
   }
 
   return (

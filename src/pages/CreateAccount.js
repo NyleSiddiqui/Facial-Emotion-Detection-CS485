@@ -32,24 +32,17 @@ function CreateAccount() {
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [photo, setPhoto] = useState('https://via.placeholder.com/300');
   const [file, setFile] = useState('');
 
 
-  const handleCreate = () => {
+  const handleCreate = (event) => {
+    event.preventDefault();
     createAccount({email}, {password}).then(() => {
       uploadProfilePhoto({file}).then(url => {
-        setPhoto(url)
-        setProfile({firstName}, {lastName}, {photo});
+        setProfile({firstName}, {lastName}, url);
         history.push("/verification");
       });
     });
-    // createAccount({email}, {password})
-    // uploadProfilePhoto({file}).then(url => {
-    //   setPhoto(url)
-    //   setProfile({firstName}, {lastName}, {photo});
-    //   history.push("/verification");
-    // });
     // setAlert("Message");
   }
 
