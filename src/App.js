@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/App.css";
 import Login from "./pages/Login";
 import CreateAccount from "./pages/CreateAccount";
+import ForgotPass from "./pages/ForgotPass";
 import PastResults from "./pages/PastResults";
 import UploadPage from "./pages/UploadPage";
 import Layout from "./components/Layout";
@@ -26,6 +27,9 @@ function App() {
         </Route>
         <Route exact path="/login">
           <Login />
+        </Route>
+        <Route exact path="/forgotpass">
+          <ForgotPass />
         </Route>
         <Route exact path="/create">
           <CreateAccount />
