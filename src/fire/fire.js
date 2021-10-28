@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -19,25 +20,94 @@ const firebaseConfig = {
 // Initialize Firebase
 const fb = initializeApp(firebaseConfig);
 const auth = getAuth();
+const storage = getStorage();
 
 function createAccount(email, password) { 
     email = email['email']
     password = password['password']
-    
-    createUserWithEmailAndPassword(auth, email, password).then(userCredential => {
-        const user = userCredential.user;
-        let msg = "Account created for " + email;
-        console.log(msg);
-        console.log("Verification Status: " + user.emailVerified);
-        verifyEmail();
-    });
+    return new Promise((resolve, reject) => {
+      createUserWithEmailAndPassword(auth, email, password).then(userCredential => {
+          const user = userCredential.user;
+          let msg = "Account created for " + email;
+          console.log(msg);
+          verifyEmail();
+          resolve();
+      });
+    })
+}
+
+function loginUser(email, password) {
+  email = email['email']
+  password = password['password']
+  signInWithEmailAndPassword(auth, email, password).then(userCredential => {
+    console.log("Signed on!");
+  })
+}
+
+function setProfile(firstName, lastName, photoLink) {
+  firstName = firstName['firstName']
+  lastName = lastName['lastName']
+  photoLink = photoLink['photoLink']
+    updateProfile(auth.currentUser, {
+      displayName: firstName + lastName, photoURL: photoLink
+    }).then(()=> {
+      console.log("Profile Updated")
+    })
 }
 
 function verifyEmail() {
-    let user = auth.currentUser;
-    sendEmailVerification(user).then(() => {
+    sendEmailVerification(auth.currentUser).then(() => {
       console.log("Sending Verification Email")
     });
 }
 
-export { createAccount, verifyEmail };
+function getProfile() {
+  let user = auth.currentUser
+  let profile = {}
+  console.log(user)
+  if(user) {
+    let names = user.displayName.split();
+    profile = {
+      "firstName": names[0],
+      "lastName": names[1],
+      "email": user.email,
+      "photo": user.photoURL
+    }
+  } else {
+    let examplePhoto = "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=466&q=80"
+  
+    profile = {
+      "firstName": "Thomas",
+      "lastName": "Reither",
+      "email": "myemail@testing.com",
+      "photo": examplePhoto
+    }
+  }
+
+  return profile;
+}
+
+function uploadProfilePhoto(file) {
+  file = file['file']
+
+  return new Promise((resolve, reject) => {
+    if(auth.currentUser) {
+      let filepath = auth.currentUser.uid + "/profilePic"
+      let fileRef = ref(storage, filepath)
+      let metadata = {
+        contentType: file.type,
+      };
+      uploadBytes(fileRef, file, metadata).then(() => {
+        console.log("File Uploaded")
+        fileRef = ref(storage, filepath)
+        getDownloadURL(fileRef).then(url => {
+          resolve(url)
+        })
+      })
+    }
+  });
+}
+
+
+export { loginUser, createAccount, verifyEmail, setProfile,
+   getProfile, uploadProfilePhoto};

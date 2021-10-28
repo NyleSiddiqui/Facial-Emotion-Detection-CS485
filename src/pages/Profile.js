@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -6,16 +6,27 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Image from "react-bootstrap/Image";
 import Happy from "../images/sample/happy.jpg";
+import {getProfile} from '../fire/fire'
 
 function Profile() {
   const [firstName, setFirstName] = useState("Dylan");
   const [lastName, setLastName] = useState("Black");
-  //const [email, setEmail] = useState("blackdt0976@uwec.edu");
+  const [email, setEmail] = useState("blackdt0976@uwec.edu");
+  const [photo, setPhoto] = useState("https://via.placeholder.com/200")
+
+  useEffect(() => {
+    let profile = getProfile();
+    setFirstName(profile.firstName);
+    setLastName(profile.lastName);
+    setEmail(profile.email);
+    setPhoto(profile.photo);
+  }, []);
+
   return (
     <>
       <Row className="mt-4">
         <Col className="text-center align-middle" md={3}>
-          <Image className="rounded-circle w-100" src={Happy} />
+          <Image className="rounded-circle w-100" src={photo} />
           <h2 className="mt-3">
             {firstName} {lastName}
           </h2>
@@ -44,7 +55,7 @@ function Profile() {
               <Form.Label>Email:</Form.Label>
               <Form.Control
                 type="email"
-                value="blackdt0976@uwec.edu"
+                value={email}
                 disabled
               />
             </Form.Group>
