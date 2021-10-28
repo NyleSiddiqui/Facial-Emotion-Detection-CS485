@@ -8,6 +8,7 @@ import Alert from "react-bootstrap/Alert";
 import Popover from "react-bootstrap/Popover";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {createAccount} from "../fire/fire"
 
 // Tooltip for Password Requirements
 const passwordTooltip = (
@@ -27,8 +28,12 @@ const passwordTooltip = (
 function CreateAccount() {
   let history = useHistory();
   const [alert, setAlert] = useState(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
 
   const handleCreate = () => {
+    createAccount({email}, {password})
     history.push("/verification");
     // setAlert("Message");
   }
@@ -57,7 +62,8 @@ function CreateAccount() {
             <h4>Account Info</h4>
             <Form.Group>
               <Form.Label>Email Address</Form.Label>
-              <Form.Control type="email" required />
+              <Form.Control type="email" value={email} 
+              onInput={e => {setEmail(e.target.value)}} required />
             </Form.Group>
 
             <Form.Group>
@@ -71,7 +77,8 @@ function CreateAccount() {
                     </a>
                 </OverlayTrigger>
               </Form.Label>
-              <Form.Control type="password" required />
+              <Form.Control type="password" value={password} 
+              onInput={e => {setPassword(e.target.value)}} required />
             </Form.Group>
 
             <Form.Group>

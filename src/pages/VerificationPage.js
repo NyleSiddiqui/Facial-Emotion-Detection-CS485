@@ -2,9 +2,15 @@ import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { Alert } from "react-bootstrap";
+import {verifyEmail} from "../fire/fire"
 
 function VerificationPage() {
   const [show, setShow] = useState(false);
+
+  const resendEmail = () => {
+    verifyEmail();
+    setShow(true)
+  }
 
   if (show)
   {
@@ -30,7 +36,7 @@ function VerificationPage() {
         <p id="verification-paragraph">
           just click resend!
         </p>
-        <Button id="resend-btn" onClick={() => setShow(true)}>
+        <Button id="resend-btn" onClick={resendEmail}>
           Resend
         </Button>
       </div>
