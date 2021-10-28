@@ -33,7 +33,7 @@ function Login({ history }) {
               setPassword(e.target.value);
             }}
           />
-          <a href="/">Forgot my password</a>
+          <a href="/forgotpass">Forgot my password</a>
         </Form.Group>
         <div className="d-flex justify-content-between w-75 mt-2">
           <Button type="submit" variant="primary">
