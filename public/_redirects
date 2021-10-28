@@ -1,0 +1,2 @@
+# This rule is meant to fix the routing on Netlify
+/* /index.html 200
