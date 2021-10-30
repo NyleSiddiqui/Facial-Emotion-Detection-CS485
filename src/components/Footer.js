@@ -25,16 +25,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
-<Container>
-        <Nav className='footer-item'>
-          <Nav.Link href="/tos">Terms of Service</Nav.Link>
-        </Nav>
-        <Nav className='footer-item'>
-          <Nav.Link href='/privacy_policy'>Privacy Policy</Nav.Link>
-        </Nav>
-        <Nav className='footer-item'>
-          <img src={ CopyRightImg } alt='Copyright' />
-          <span id='copyright-date'>10/18/2021</span>
-        </Nav>
-      </Container>
