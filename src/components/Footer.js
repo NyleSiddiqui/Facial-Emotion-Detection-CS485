@@ -2,7 +2,6 @@ import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import { Nav } from "react-bootstrap";
-import CopyRightImg from '../images/copyright-img.png';
 import '../styles/App.css';
 
 const Footer = () => {
