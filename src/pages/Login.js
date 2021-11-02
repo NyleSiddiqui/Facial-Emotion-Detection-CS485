@@ -4,11 +4,20 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Alert from "react-bootstrap/Alert";
+import {loginUser} from '../fire/fire'
+
 
 function Login({ history }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [alert, setAlert] = useState(null);
+
+  function login(event) {
+    event.preventDefault()
+    loginUser({email}, {password}).then(() => {
+      history.push("/profile");
+    })
+  }
 
   return (
     <div className="login-container">
@@ -43,7 +52,7 @@ function Login({ history }) {
           <a href="/">Forgot my password</a>
         </Form.Group>
         <div className="d-flex justify-content-between w-75 mt-2">
-          <Button type="submit" variant="primary">
+          <Button type="submit" variant="primary" onClick={login}>
             Log In
           </Button>
           <Button href="/create" variant="outline-dark">

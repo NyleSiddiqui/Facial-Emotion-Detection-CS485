@@ -8,6 +8,7 @@ import Alert from "react-bootstrap/Alert";
 import Popover from "react-bootstrap/Popover";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {createAccount, setProfile, uploadProfilePhoto} from "../fire/fire"
 
 // Tooltip for Password Requirements
 const passwordTooltip = (
@@ -27,9 +28,21 @@ const passwordTooltip = (
 function CreateAccount() {
   let history = useHistory();
   const [alert, setAlert] = useState(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [file, setFile] = useState('');
 
-  const handleCreate = () => {
-    history.push("/verification");
+
+  const handleCreate = (event) => {
+    event.preventDefault();
+    createAccount({email}, {password}).then(() => {
+      uploadProfilePhoto({file}).then(url => {
+        setProfile({firstName}, {lastName}, url);
+        history.push("/verification");
+      });
+    });
     // setAlert("Message");
   }
 
@@ -57,7 +70,8 @@ function CreateAccount() {
             <h4>Account Info</h4>
             <Form.Group>
               <Form.Label>Email Address</Form.Label>
-              <Form.Control type="email" required />
+              <Form.Control type="email" value={email} 
+              onInput={e => {setEmail(e.target.value)}} required />
             </Form.Group>
 
             <Form.Group>
@@ -71,7 +85,8 @@ function CreateAccount() {
                     </a>
                 </OverlayTrigger>
               </Form.Label>
-              <Form.Control type="password" required />
+              <Form.Control type="password" value={password} 
+              onInput={e => {setPassword(e.target.value)}} required />
             </Form.Group>
 
             <Form.Group>
@@ -84,17 +99,19 @@ function CreateAccount() {
             <h4>Personal Info</h4>
             <Form.Group>
               <Form.Label>First Name</Form.Label>
-              <Form.Control type="firstname" required />
+              <Form.Control type="firstname" value={firstName} 
+              onInput={e => {setFirstName(e.target.value)}} required />
             </Form.Group>
 
             <Form.Group>
               <Form.Label>Last Name</Form.Label>
-              <Form.Control type="lastname" required />
+              <Form.Control type="lastname" value={lastName} 
+              onInput={e => {setLastName(e.target.value)}} required />
             </Form.Group>
 
             <Form.Group>
               <Form.Label>Profile Picture</Form.Label>
-              <Form.Control type="file" required />
+              <Form.Control type="file" onChange={e => {setFile(e.target.files[0])}} required />
             </Form.Group>
             <br/>
             <Form.Group>
