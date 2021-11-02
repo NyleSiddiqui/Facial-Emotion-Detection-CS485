@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged, setPersistence, browserSessionPersistence, signOut,signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut,signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getFirestore, collection, addDoc, where, query, getDocs  } from "firebase/firestore"
 
@@ -56,6 +56,18 @@ function createAccount(email, password) {
           resolve();
       });
     })
+}
+
+function isAuthenticated() {
+  return new Promise((resolve, reject) => {
+    onAuthStateChanged(auth, (user) => {
+      if(user) {
+        resolve(true)
+      } else {
+        resolve(false)
+      }
+    })
+  })
 }
 
 function loginUser(email, password) {
@@ -214,6 +226,5 @@ function getResults() {
   })
 }
 
-
 export { loginUser, createAccount, verifyEmail, setProfile,
-   getProfile, uploadProfilePhoto, uploadPhoto, logout, addEmotion, getResults};
+   getProfile, uploadProfilePhoto, uploadPhoto, logout, addEmotion, getResults, isAuthenticated};
