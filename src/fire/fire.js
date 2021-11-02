@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, setPersistence, browserSessionPersistence, signOut,signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
+import { getAuth, onAuthStateChanged, setPersistence, browserSessionPersistence, signOut,signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { useAuthState } from 'react-firebase-hooks/auth';
+import { getFirestore, collection, addDoc  } from "firebase/firestore"
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -22,6 +22,23 @@ const firebaseConfig = {
 const fb = initializeApp(firebaseConfig);
 const auth = getAuth();
 const storage = getStorage();
+const db = getFirestore();
+
+function addEmotion(filename, classifiedEmotion) {
+  onAuthStateChanged(auth, (user) => {
+    try {
+      addDoc(collection(db, "Emotions"), {
+        uid: user.uid,
+        img: filename,
+        emotion: classifiedEmotion
+      }).then(() => {
+        console.log("Uploaded Emotion Data to Firestore!")
+      });
+    } catch (e) {
+      console.log("Couldn't upload emotion data!")
+    }
+  });
+}
 
 function createAccount(email, password) { 
     email = email['email']
@@ -50,13 +67,31 @@ function loginUser(email, password) {
 }
 
 function setProfile(firstName, lastName, photoLink) {
-  firstName = firstName['firstName']
-  lastName = lastName['lastName']
-    updateProfile(auth.currentUser, {
-      displayName: firstName + " " + lastName, photoURL: photoLink
-    }).then(()=> {
-      console.log("Profile Updated")
+  console.log(photoLink)
+  console.log("Hello??")
+  if(photoLink == null || photoLink == "" || photoLink == undefined) {
+    getProfile().then(profile => {
+      photoLink = profile.photo
     })
+    console.log("Photo not found!")
+  }
+
+  return new Promise((resolve, reject) => {
+    onAuthStateChanged(auth, (user) => {
+      if(user) {     
+        firstName = firstName['firstName']
+        lastName = lastName['lastName']
+          updateProfile(user, {
+            displayName: firstName + " " + lastName, photoURL: photoLink
+          }).then(()=> {
+            console.log("Profile Updated")
+            resolve();
+          })
+      } else {
+        console.log("User not logged in!")
+      }
+      })
+  }) 
 }
 
 function verifyEmail() {
@@ -66,49 +101,83 @@ function verifyEmail() {
 }
 
 function getProfile() {
-  let user = auth.currentUser
   let profile = {}
-  console.log(user)
-  if(user) {
-    let names = user.displayName.split(' ');
-    profile = {
-      "firstName": names[0],
-      "lastName": names[1],
-      "email": user.email,
-      "photo": user.photoURL
+  return new Promise((resolve, reject) => {
+    onAuthStateChanged(auth, (user) => {
+    console.log(user)
+    if(user) {
+      let names = user.displayName.split(' ');
+      profile = {
+        "firstName": names[0],
+        "lastName": names[1],
+        "email": user.email,
+        "photo": user.photoURL
+      }
+    } else {
+      let examplePhoto = "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=466&q=80"
+    
+      profile = {
+        "firstName": "Thomas",
+        "lastName": "Reither",
+        "email": "myemail@testing.com",
+        "photo": examplePhoto
+      }
     }
-  } else {
-    let examplePhoto = "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=466&q=80"
-  
-    profile = {
-      "firstName": "Thomas",
-      "lastName": "Reither",
-      "email": "myemail@testing.com",
-      "photo": examplePhoto
-    }
-  }
-
-  return profile;
+    resolve(profile);
+  })
+  })
 }
+
 
 function uploadProfilePhoto(file) {
   file = file['file']
 
   return new Promise((resolve, reject) => {
-    if(auth.currentUser) {
-      let filepath = auth.currentUser.uid + "/profilePic"
-      let fileRef = ref(storage, filepath)
-      let metadata = {
-        contentType: file.type,
-      };
-      uploadBytes(fileRef, file, metadata).then(() => {
-        console.log("File Uploaded")
-        fileRef = ref(storage, filepath)
-        getDownloadURL(fileRef).then(url => {
-          resolve(url)
+    onAuthStateChanged(auth, (user) => {
+      if(user) {
+        let filepath = user.uid + "/profile"
+        let fileRef = ref(storage, filepath)
+        let metadata = {
+          contentType: file.type,
+        };
+        uploadBytes(fileRef, file, metadata).then(() => {
+         console.log("File Uploaded")
+          fileRef = ref(storage, filepath)
+          getDownloadURL(fileRef).then(url => {
+            resolve(url)
+          })
         })
-      })
-    }
+      } else {
+        reject("User not logged in!")
+      }
+    });
+  });
+}
+
+function uploadPhoto(file) {
+  file = file['file']
+
+  return new Promise((resolve, reject) => {
+    onAuthStateChanged(auth, (user) => {
+      if(user) {
+        let time = new Date()
+        let filename = "emotion-" + time.valueOf();
+        let filepath = user.uid + "/" + filename;
+        let fileRef = ref(storage, filepath)
+        let metadata = {
+          contentType: file.type,
+        };
+        uploadBytes(fileRef, file, metadata).then(() => {
+         console.log("File Uploaded")
+          fileRef = ref(storage, filepath)
+          getDownloadURL(fileRef).then(url => {
+            resolve({'url': url, 'filename': filename})
+          })
+        })
+      } else {
+        reject("User not logged in!")
+      }
+    });
   });
 }
 
@@ -120,4 +189,4 @@ function logout() {
 
 
 export { loginUser, createAccount, verifyEmail, setProfile,
-   getProfile, uploadProfilePhoto, logout};
+   getProfile, uploadProfilePhoto, uploadPhoto, logout, addEmotion};

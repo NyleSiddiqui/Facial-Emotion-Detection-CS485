@@ -10,6 +10,7 @@ import Webcam from "react-webcam";
 import Happy from "../images/sample/happy.jpg";
 import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {uploadPhoto, addEmotion} from '../fire/fire'
 
 function UploadPage() {
   const webcamRef = useRef(null);
@@ -17,12 +18,15 @@ function UploadPage() {
   const [alert, setAlert] = useState(null);
   const inputFileRef = useRef(null);
   const [show, setShow] = useState(false);
+  const [file, setFile] = useState(null);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const onFileChange = (e) => {
     setImgSrc(URL.createObjectURL(e.target.files[0]));
+    setFile(e.target.files[0]);
+    console.log(e.target.files[0]);
   };
 
   const handleUploadFile = () => {
@@ -32,14 +36,27 @@ function UploadPage() {
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImgSrc(imageSrc);
+    
+    fetch(imageSrc).then(res => res.blob()).then(blob => {
+      let screenshot = new File([blob], "test.jpg", {type:'image/jpeg'})
+      setFile(screenshot);
+    })
+    
   }, [webcamRef, setImgSrc]);
 
   const handleDrop = (file) => {
     setImgSrc(URL.createObjectURL(file[0]));
+    setFile(file[0]);
+
   };
 
   const handleDetect = () => {
-    handleShow();
+    uploadPhoto({file}).then(url => {
+      console.log(url);
+      let emotion = prompt("Enter Detected Emotion");
+      addEmotion(url['filename'], emotion)
+    })
+    // handleShow();
     //setAlert("There was an error");
   };
 
