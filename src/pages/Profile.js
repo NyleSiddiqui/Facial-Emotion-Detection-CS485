@@ -5,7 +5,6 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Image from "react-bootstrap/Image";
-import Happy from "../images/sample/happy.jpg";
 import {getProfile, setProfile, uploadProfilePhoto} from '../fire/fire'
 
 function Profile() {
@@ -33,7 +32,7 @@ function Profile() {
     console.log({file})
     let filename = {file}
     console.log(filename['file'])
-    if(filename['file'] == '' || filename['file'] == undefined) {
+    if(filename['file'] === '' || filename['file'] === undefined) {
       setProfile({firstName}, {lastName}, '').then(() => {
         updateProfile();
       })      

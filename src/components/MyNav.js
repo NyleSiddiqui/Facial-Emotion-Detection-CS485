@@ -1,14 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import { NavDropdown, Nav } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import "../styles/App.css";
-import UserImage from '../images/mitchell-small.png'
-import {logout} from '../fire/fire'
+// import UserImage from '../images/mitchell-small.png'
+import {logout, getProfile} from '../fire/fire'
 
 const MyNav = () => {
   let history = useHistory();
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    getProfile().then(userProfile => {
+      setProfile(userProfile['photo'])
+    })
+  })
 
   function signOut(event) {
     event.preventDefault();
@@ -26,7 +33,7 @@ const MyNav = () => {
           <NavDropdown id="nav-dropdown"
             title= {
               <span>
-                <img className='thumbnail-image' src={UserImage} alt="apple" />
+                <img className='thumbnail-image' width="35" height="35" src={profile} alt="apple" />
               </span>
             }
           >

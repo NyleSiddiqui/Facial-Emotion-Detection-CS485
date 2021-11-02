@@ -19,7 +19,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const fb = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 const auth = getAuth();
 const storage = getStorage();
 const db = getFirestore();
@@ -49,7 +49,6 @@ function createAccount(email, password) {
     password = password['password']
     return new Promise((resolve, reject) => {
       createUserWithEmailAndPassword(auth, email, password).then(userCredential => {
-          const user = userCredential.user;
           let msg = "Account created for " + email;
           console.log(msg);
           verifyEmail();
@@ -84,7 +83,7 @@ function loginUser(email, password) {
 
 function setProfile(firstName, lastName, photoLink) {
   let isPhotoPresent = true;
-  if(photoLink == null || photoLink == '' || photoLink == undefined) {
+  if(photoLink == null || photoLink === '' || photoLink === undefined) {
     isPhotoPresent = false;
     console.log("Photo not found!")
   }

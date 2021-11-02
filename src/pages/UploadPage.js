@@ -56,7 +56,7 @@ function UploadPage() {
       let emotion = prompt("Enter Detected Emotion");
       addEmotion(res['url'], emotion)
     })
-    // handleShow();
+    handleShow();
     //setAlert("There was an error");
   };
 

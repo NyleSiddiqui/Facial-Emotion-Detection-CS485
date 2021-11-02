@@ -5,8 +5,6 @@ import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Happy from "../images/sample/happy.jpg";
-import Sad from "../images/sample/sad.jpg";
-import Angry from "../images/sample/angry.jpg";
 import {getResults} from '../fire/fire'
 
 function PastResults() {
@@ -20,7 +18,6 @@ function PastResults() {
       </Card>
     </Col>)
 
-  const [results, setResults] = useState(null);
   const [cards, setCards] = useState(defaultCard)
 
   useEffect(()=> {
