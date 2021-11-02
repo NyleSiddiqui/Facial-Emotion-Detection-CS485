@@ -11,7 +11,7 @@ import Layout from "./components/Layout";
 import TermsOfService from "./pages/TermsOfService";
 import Profile from "./pages/Profile";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
-import VerificationPage from "./pages/VerificationPage"
+import VerificationPage from "./pages/VerificationPage";
 
 library.add(fas);
 

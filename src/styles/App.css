@@ -2,6 +2,16 @@ body {
   background-color: #efefef;
 }
 
+.site {
+  flex: 1;
+}
+
+.site-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .App {
   text-align: center;
 }
@@ -39,6 +49,23 @@ body {
   to {
     transform: rotate(360deg);
   }
+}
+
+.thumbnail-image {
+  border-radius: 80%;
+}
+
+.nav-link {
+  color: azure !important;
+}
+
+#copyright-symbol {
+  color: azure;
+}
+
+#copyright-date {
+  color: azure;
+  padding-left: 2mm;
 }
 
 .dropzone {
