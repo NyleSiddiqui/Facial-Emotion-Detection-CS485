@@ -30,11 +30,20 @@ function Profile() {
 
   function saveProfile(event) {
     event.preventDefault();
-    uploadProfilePhoto({file}).then(url => {
-      setProfile({firstName}, {lastName}, url).then(() => {
+    console.log({file})
+    let filename = {file}
+    console.log(filename['file'])
+    if(filename['file'] == '' || filename['file'] == undefined) {
+      setProfile({firstName}, {lastName}, '').then(() => {
         updateProfile();
+      })      
+    } else {
+      uploadProfilePhoto({file}).then(url => {
+        setProfile({firstName}, {lastName}, url).then(() => {
+          updateProfile();
+        })
       })
-    })
+    }
   }
 
   return (

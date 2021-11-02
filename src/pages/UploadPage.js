@@ -51,10 +51,10 @@ function UploadPage() {
   };
 
   const handleDetect = () => {
-    uploadPhoto({file}).then(url => {
-      console.log(url);
+    uploadPhoto({file}).then(res => {
+      console.log(res);
       let emotion = prompt("Enter Detected Emotion");
-      addEmotion(url['filename'], emotion)
+      addEmotion(res['url'], emotion)
     })
     // handleShow();
     //setAlert("There was an error");

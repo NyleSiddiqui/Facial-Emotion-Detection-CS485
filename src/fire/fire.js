@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, setPersistence, browserSessionPersistence, signOut,signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { getFirestore, collection, addDoc  } from "firebase/firestore"
+import { getFirestore, collection, addDoc, where, query, getDocs  } from "firebase/firestore"
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -25,12 +25,16 @@ const storage = getStorage();
 const db = getFirestore();
 
 function addEmotion(filename, classifiedEmotion) {
+  
+  
   onAuthStateChanged(auth, (user) => {
     try {
+      let date = new Date()
       addDoc(collection(db, "Emotions"), {
         uid: user.uid,
         img: filename,
-        emotion: classifiedEmotion
+        emotion: classifiedEmotion,
+        time: date.toString()
       }).then(() => {
         console.log("Uploaded Emotion Data to Firestore!")
       });
@@ -67,12 +71,9 @@ function loginUser(email, password) {
 }
 
 function setProfile(firstName, lastName, photoLink) {
-  console.log(photoLink)
-  console.log("Hello??")
-  if(photoLink == null || photoLink == "" || photoLink == undefined) {
-    getProfile().then(profile => {
-      photoLink = profile.photo
-    })
+  let isPhotoPresent = true;
+  if(photoLink == null || photoLink == '' || photoLink == undefined) {
+    isPhotoPresent = false;
     console.log("Photo not found!")
   }
 
@@ -81,12 +82,21 @@ function setProfile(firstName, lastName, photoLink) {
       if(user) {     
         firstName = firstName['firstName']
         lastName = lastName['lastName']
+        if(isPhotoPresent) {
           updateProfile(user, {
             displayName: firstName + " " + lastName, photoURL: photoLink
           }).then(()=> {
             console.log("Profile Updated")
             resolve();
           })
+        } else {
+          updateProfile(user, {
+            displayName: firstName + " " + lastName,
+          }).then(()=> {
+            console.log("Profile Updated. No new photo.")
+            resolve();
+          })
+        }
       } else {
         console.log("User not logged in!")
       }
@@ -187,6 +197,23 @@ function logout() {
   });
 }
 
+function getResults() {
+  let resultList = [];
+
+  return new Promise((resolve, reject) => {
+    onAuthStateChanged(auth, (user) => {
+      const emotions = collection(db, "Emotions");
+      const q = query(emotions, where("uid", "==", user.uid));
+      getDocs(q).then(results => {
+        results.forEach(result => {
+          resultList.push(result);
+        })
+        resolve(resultList);
+      })
+    })
+  })
+}
+
 
 export { loginUser, createAccount, verifyEmail, setProfile,
-   getProfile, uploadProfilePhoto, uploadPhoto, logout, addEmotion};
+   getProfile, uploadProfilePhoto, uploadPhoto, logout, addEmotion, getResults};
