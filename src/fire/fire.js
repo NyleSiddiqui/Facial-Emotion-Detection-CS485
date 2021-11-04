@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged, signOut,signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut,signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, updateProfile, sendPasswordResetEmail } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getFirestore, collection, addDoc, where, query, getDocs  } from "firebase/firestore"
 
@@ -225,5 +225,17 @@ function getResults() {
   })
 }
 
+function resetPassword(email) {
+  email = email['email']
+
+  return new Promise((resolve, reject) => {
+    sendPasswordResetEmail(auth, email).then(() => {
+      console.log('Sent login reset')
+      resolve()
+    });
+  })
+}
+
 export { loginUser, createAccount, verifyEmail, setProfile,
-   getProfile, uploadProfilePhoto, uploadPhoto, logout, addEmotion, getResults, isAuthenticated};
+   getProfile, uploadProfilePhoto, uploadPhoto, logout, addEmotion, getResults, isAuthenticated, 
+   resetPassword};

@@ -3,9 +3,18 @@ import { withRouter } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {resetPassword} from '../fire/fire'
 
 function ForgotPass({ history }) {
   const [email, setEmail] = useState("");
+
+  function resetPass(event) {
+    event.preventDefault()
+    resetPassword({email}).then(() => {
+      // Redirect back to the login page
+      history.push("/login")
+    })
+  }
 
   return (
     <div className="login-container">
@@ -30,8 +39,8 @@ function ForgotPass({ history }) {
               style={{ fontSize: "12pt" }}
             />{" "}Back to Login
           </Button>
-          <Button type="submit" variant="primary">
-		  	Reset My Password
+          <Button type="submit" variant="primary" onClick={resetPass}>
+		  	  Reset My Password
           </Button>
         </div>
       </Form>
