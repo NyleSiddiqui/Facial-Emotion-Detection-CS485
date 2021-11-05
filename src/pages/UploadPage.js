@@ -10,9 +10,11 @@ import Webcam from "react-webcam";
 import Happy from "../images/sample/happy.jpg";
 import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {uploadPhoto, addEmotion} from '../fire/fire'
+import {uploadPhoto, addEmotion} from '../fire/fire';
+// import * as tf from '@tensorflow/tfjs';
 
 function UploadPage() {
+  //const model = tf.loadLayersModel('https:')
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
   const [alert, setAlert] = useState(null);
