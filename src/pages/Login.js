@@ -1,33 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { withRouter } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { loginUser } from "../fire/fire";
+import Context from "../context";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Alert from "react-bootstrap/Alert";
-import {loginUser} from '../fire/fire'
-
 
 function Login({ history }) {
+  const { notification, addNotification, removeNotification } =
+    useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [alert, setAlert] = useState(null);
 
   function login(event) {
-    event.preventDefault()
-    loginUser({email}, {password}).then(() => {
-      history.push("/profile");
-    })
+    event.preventDefault();
+    loginUser(email, password)
+      .then(() => {
+        history.push("/detect");
+      })
+      .catch((error) => {
+        addNotification(error, "danger");
+      });
   }
 
   return (
     <div className="login-container">
       <Form className="login">
-        <h3>Facial Emotion Detection Log In</h3>
-        {alert && (
-          <Alert variant="success" onClose={() => setAlert(null)} dismissible className="w-auto">
-            Your email has been verified. You can now log in below.
+        {Object.keys(notification).length !== 0 && (
+          <Alert
+            className="w-75"
+            variant={notification.type}
+            onClose={removeNotification}
+            dismissible
+          >
+            {notification.message}
           </Alert>
         )}
+        <h3>Facial Emotion Detection Log In</h3>
         <Form.Group className="w-75">
           <Form.Label>Email Address</Form.Label>
           <Form.Control
