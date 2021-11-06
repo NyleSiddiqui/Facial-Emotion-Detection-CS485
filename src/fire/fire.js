@@ -144,17 +144,25 @@ function setProfile(firstName, lastName, photoLink) {
           updateProfile(user, {
             displayName: firstName + " " + lastName,
             photoURL: photoLink,
-          }).then(() => {
-            console.log("Profile Updated");
-            resolve();
-          });
+          })
+            .then(() => {
+              console.log("Profile Updated");
+              resolve();
+            })
+            .catch((error) => {
+              reject("An error occurred when updating your profile");
+            });
         } else {
           updateProfile(user, {
             displayName: firstName + " " + lastName,
-          }).then(() => {
-            console.log("Profile Updated. No new photo.");
-            resolve();
-          });
+          })
+            .then(() => {
+              console.log("Profile Updated. No new photo.");
+              resolve();
+            })
+            .catch((error) => {
+              reject("An error occurred when updating your profile");
+            });
         }
       } else {
         console.log("User not logged in!");

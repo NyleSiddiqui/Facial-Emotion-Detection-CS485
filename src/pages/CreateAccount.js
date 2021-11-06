@@ -40,10 +40,14 @@ function CreateAccount() {
     event.preventDefault();
     createAccount({ email }, { password })
       .then(() => {
-        uploadProfilePhoto({ file }).then((url) => {
-          setProfile({ firstName }, { lastName }, url);
-          history.push("/verification");
-        });
+        uploadProfilePhoto({ file })
+          .then((url) => {
+            setProfile({ firstName }, { lastName }, url);
+            history.push("/verification");
+          })
+          .catch((error) => {
+            addNotification(error, "danger");
+          });
       })
       .catch((error) => {
         addNotification(error, "danger");
