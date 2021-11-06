@@ -4,7 +4,6 @@ import Container from "react-bootstrap/Container";
 import { NavDropdown, Nav } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import "../styles/App.css";
-// import UserImage from '../images/mitchell-small.png'
 import {logout, getProfile} from '../fire/fire'
 
 const MyNav = () => {

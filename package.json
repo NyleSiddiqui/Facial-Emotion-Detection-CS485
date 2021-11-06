@@ -8,6 +8,7 @@
     "@fortawesome/react-fontawesome": "^0.1.15",
     "@react-pdf-viewer/core": "2.9.1",
     "@react-pdf-viewer/get-file": "^2.9.1",
+    "@tensorflow/tfjs": "^3.11.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
