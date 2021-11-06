@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { withRouter, useHistory } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { createAccount, setProfile, uploadProfilePhoto } from "../fire/fire";
+import Context from "../context";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -7,8 +10,6 @@ import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import Popover from "react-bootstrap/Popover";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {createAccount, setProfile, uploadProfilePhoto} from "../fire/fire"
 
 // Tooltip for Password Requirements
 const passwordTooltip = (
@@ -27,114 +28,147 @@ const passwordTooltip = (
 
 function CreateAccount() {
   let history = useHistory();
-  const [alert, setAlert] = useState(null);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [file, setFile] = useState('');
-
+  const { notification, addNotification, removeNotification } =
+    useContext(Context);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [file, setFile] = useState("");
 
   const handleCreate = (event) => {
     event.preventDefault();
-    createAccount({email}, {password}).then(() => {
-      uploadProfilePhoto({file}).then(url => {
-        setProfile({firstName}, {lastName}, url);
-        history.push("/verification");
+    createAccount({ email }, { password })
+      .then(() => {
+        uploadProfilePhoto({ file }).then((url) => {
+          setProfile({ firstName }, { lastName }, url);
+          history.push("/verification");
+        });
+      })
+      .catch((error) => {
+        addNotification(error, "danger");
       });
-    });
-    // setAlert("Message");
-  }
+  };
 
   return (
     <>
-    <div className="create-account-container">
-      <Form className="create-account">
-        <Row>
-          <Col sm={12}>
-            <h3>Facial Emotion Detection Create Account</h3>
-          </Col>
-        </Row>
-        {alert && (
-        <Row>
-          <Col sm={12}>
-            <Alert variant="danger" onClose={() => setAlert(null)} dismissible className="w-auto">
-              { /*Your password must be at least 8 characters long and have lowercase and uppercase letters and have a number.*/ }
-              The email address you entered is already in use.
+      <div className="create-account-container">
+        <Form className="create-account">
+          {Object.keys(notification).length !== 0 && (
+            <Alert
+              className="w-75"
+              variant={notification.type}
+              onClose={removeNotification}
+              dismissible
+            >
+              {notification.message}
             </Alert>
-          </Col>
-        </Row>
-        )}
-        <Row>
-          <Col sm={6}>
-            <h4>Account Info</h4>
-            <Form.Group>
-              <Form.Label>Email Address</Form.Label>
-              <Form.Control type="email" value={email} 
-              onInput={e => {setEmail(e.target.value)}} required />
-            </Form.Group>
+          )}
+          <h3>Facial Emotion Detection Create Account</h3>
 
-            <Form.Group>
-              <Form.Label>
-                Password
-                <OverlayTrigger overlay={passwordTooltip}>
-                  <a href="/" className="ms-1"><FontAwesomeIcon
+          <Row>
+            <Col sm={12}></Col>
+            <Col sm={6}>
+              <h4>Account Info</h4>
+              <Form.Group>
+                <Form.Label>Email Address</Form.Label>
+                <Form.Control
+                  type="email"
+                  value={email}
+                  onInput={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Label>
+                  Password
+                  <OverlayTrigger overlay={passwordTooltip}>
+                    <a href="/" className="ms-1">
+                      <FontAwesomeIcon
                         icon={["fas", "question-circle"]}
                         style={{ fontSize: "1em" }}
                       />
                     </a>
-                </OverlayTrigger>
-              </Form.Label>
-              <Form.Control type="password" value={password} 
-              onInput={e => {setPassword(e.target.value)}} required />
-            </Form.Group>
+                  </OverlayTrigger>
+                </Form.Label>
+                <Form.Control
+                  type="password"
+                  value={password}
+                  onInput={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                  required
+                />
+              </Form.Group>
 
-            <Form.Group>
-              <Form.Label>Retype Password</Form.Label>
-              <Form.Control type="password" required />
-            </Form.Group>
-          </Col>
+              <Form.Group>
+                <Form.Label>Retype Password</Form.Label>
+                <Form.Control type="password" required />
+              </Form.Group>
+            </Col>
 
-          <Col sm={6}>
-            <h4>Personal Info</h4>
-            <Form.Group>
-              <Form.Label>First Name</Form.Label>
-              <Form.Control type="firstname" value={firstName} 
-              onInput={e => {setFirstName(e.target.value)}} required />
-            </Form.Group>
+            <Col sm={6}>
+              <h4>Personal Info</h4>
+              <Form.Group>
+                <Form.Label>First Name</Form.Label>
+                <Form.Control
+                  type="firstname"
+                  value={firstName}
+                  onInput={(e) => {
+                    setFirstName(e.target.value);
+                  }}
+                  required
+                />
+              </Form.Group>
 
-            <Form.Group>
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control type="lastname" value={lastName} 
-              onInput={e => {setLastName(e.target.value)}} required />
-            </Form.Group>
+              <Form.Group>
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control
+                  type="lastname"
+                  value={lastName}
+                  onInput={(e) => {
+                    setLastName(e.target.value);
+                  }}
+                  required
+                />
+              </Form.Group>
 
-            <Form.Group>
-              <Form.Label>Profile Picture</Form.Label>
-              <Form.Control type="file" onChange={e => {setFile(e.target.files[0])}} required />
-            </Form.Group>
-            <br/>
-            <Form.Group>
-              <Form.Check
-                inline
-                required
-              /> I agree to the <a href="/privacy_policy" target="_blank">Privacy Policy</a>
-            </Form.Group>
-          </Col>
-        </Row>
-        <div className="d-flex justify-content-around w-100 mt-2">
-              <Button href="/login" variant="outline-dark">
+              <Form.Group>
+                <Form.Label>Profile Picture</Form.Label>
+                <Form.Control
+                  type="file"
+                  onChange={(e) => {
+                    setFile(e.target.files[0]);
+                  }}
+                  required
+                />
+              </Form.Group>
+              <br />
+              <Form.Group>
+                <Form.Check inline required /> I agree to the{" "}
+                <a href="/privacy_policy" target="_blank">
+                  Privacy Policy
+                </a>
+              </Form.Group>
+            </Col>
+          </Row>
+          <div className="d-flex justify-content-around w-100 mt-2">
+            <Button href="/login" variant="outline-dark">
               <FontAwesomeIcon
-                  icon={["fas", "arrow-left"]}
-                  style={{ fontSize: "12pt" }}
-                />{" "}Login
-              </Button>
-              <Button type="submit" variant="primary" onClick={handleCreate}>
-                Create Account
-              </Button>
-            </div>
-      </Form>
-    </div>
+                icon={["fas", "arrow-left"]}
+                style={{ fontSize: "12pt" }}
+              />{" "}
+              Login
+            </Button>
+            <Button type="submit" variant="primary" onClick={handleCreate}>
+              Create Account
+            </Button>
+          </div>
+        </Form>
+      </div>
     </>
   );
 }

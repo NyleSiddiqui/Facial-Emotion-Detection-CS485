@@ -62,14 +62,29 @@ function createAccount(email, password) {
   email = email["email"];
   password = password["password"];
   return new Promise((resolve, reject) => {
-    createUserWithEmailAndPassword(auth, email, password).then(
-      (userCredential) => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
         let msg = "Account created for " + email;
         console.log(msg);
         verifyEmail();
         resolve();
-      }
-    );
+      })
+      .catch((error) => {
+        switch (error.code) {
+          case "auth/weak-password":
+            reject("Your password is too weak");
+            break;
+          case "auth/operation-not-allowed":
+            reject("Accounts are currently not able to be created");
+            break;
+          case "auth/invalid-email":
+          case "auth/email-already-in-use":
+            reject("Unable to create account with the provided email");
+            break;
+          default:
+            reject("An unexpected error occurred.");
+        }
+      });
   });
 }
 
