@@ -256,13 +256,21 @@ function uploadPhoto(file) {
         let metadata = {
           contentType: file.type,
         };
-        uploadBytes(fileRef, file, metadata).then(() => {
-          console.log("File Uploaded");
-          fileRef = ref(storage, filepath);
-          getDownloadURL(fileRef).then((url) => {
-            resolve({ url: url, filename: filename });
+        uploadBytes(fileRef, file, metadata)
+          .then(() => {
+            console.log("File Uploaded");
+            fileRef = ref(storage, filepath);
+            getDownloadURL(fileRef)
+              .then((url) => {
+                resolve({ url: url, filename: filename });
+              })
+              .catch((error) => {
+                reject("Unable to fetch picture");
+              });
+          })
+          .catch((error) => {
+            reject("Unable to upload picture");
           });
-        });
       } else {
         reject("User not logged in!");
       }

@@ -1,4 +1,8 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useContext } from "react";
+import { withRouter } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { uploadPhoto, addEmotion } from "../fire/fire";
+import Context from "../context";
 import Dropzone from "react-dropzone";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -8,16 +12,15 @@ import Modal from "react-bootstrap/Modal";
 import Image from "react-bootstrap/Image";
 import Webcam from "react-webcam";
 import Happy from "../images/sample/happy.jpg";
-import { withRouter } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {uploadPhoto, addEmotion} from '../fire/fire';
+
 // import * as tf from '@tensorflow/tfjs';
 
 function UploadPage() {
+  const { notification, addNotification, removeNotification } =
+    useContext(Context);
   //const model = tf.loadLayersModel('https:')
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
-  const [alert, setAlert] = useState(null);
   const inputFileRef = useRef(null);
   const [show, setShow] = useState(false);
   const [file, setFile] = useState(null);
@@ -38,36 +41,43 @@ function UploadPage() {
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImgSrc(imageSrc);
-    
-    fetch(imageSrc).then(res => res.blob()).then(blob => {
-      let screenshot = new File([blob], "test.jpg", {type:'image/jpeg'})
-      setFile(screenshot);
-    })
-    
+
+    fetch(imageSrc)
+      .then((res) => res.blob())
+      .then((blob) => {
+        let screenshot = new File([blob], "test.jpg", { type: "image/jpeg" });
+        setFile(screenshot);
+      });
   }, [webcamRef, setImgSrc]);
 
   const handleDrop = (file) => {
     setImgSrc(URL.createObjectURL(file[0]));
     setFile(file[0]);
-
   };
 
   const handleDetect = () => {
-    uploadPhoto({file}).then(res => {
-      console.log(res);
-      let emotion = prompt("Enter Detected Emotion");
-      addEmotion(res['url'], emotion)
-    })
+    uploadPhoto({ file })
+      .then((res) => {
+        console.log(res);
+        let emotion = prompt("Enter Detected Emotion");
+        addEmotion(res["url"], emotion);
+      })
+      .catch((error) => {
+        addNotification(error, "danger");
+      });
     handleShow();
-    //setAlert("There was an error");
   };
 
   return (
     <>
-      {alert && (
-        <Alert variant="danger" onClose={() => setAlert(null)} dismissible>
-          The model was unable to detect an emotion from your image. Please
-          upload a new one.
+      {Object.keys(notification).length !== 0 && (
+        <Alert
+          className="w-100"
+          variant={notification.type}
+          onClose={removeNotification}
+          dismissible
+        >
+          {notification.message}
         </Alert>
       )}
 
