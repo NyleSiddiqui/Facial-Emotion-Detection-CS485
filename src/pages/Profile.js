@@ -8,10 +8,10 @@ import Image from "react-bootstrap/Image";
 import {getProfile, setProfile, uploadProfilePhoto} from '../fire/fire'
 
 function Profile() {
-  const [firstName, setFirstName] = useState("Dylan");
-  const [lastName, setLastName] = useState("Black");
-  const [email, setEmail] = useState("blackdt0976@uwec.edu");
-  const [photo, setPhoto] = useState("https://via.placeholder.com/200")
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [photo, setPhoto] = useState('')
   const [file, setFile] = useState('');
   
   function updateProfile() {

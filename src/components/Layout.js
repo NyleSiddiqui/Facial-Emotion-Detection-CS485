@@ -6,7 +6,7 @@ import "../styles/App.css";
 
 const Layout = ({ children }) => {
   return (
-    <body class="site">
+    <body className="site">
       <MyNav />
       <Container className = 'site-content'>{children}</Container>
       <Footer />
