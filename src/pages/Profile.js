@@ -10,6 +10,7 @@ import Image from "react-bootstrap/Image";
 import Alert from "react-bootstrap/Alert";
 
 function Profile() {
+<<<<<<< HEAD
   const { notification, addNotification, removeNotification } =
     useContext(Context);
   const [firstName, setFirstName] = useState("");
@@ -18,6 +19,14 @@ function Profile() {
   const [photo, setPhoto] = useState("");
   const [file, setFile] = useState("");
 
+=======
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [photo, setPhoto] = useState('')
+  const [file, setFile] = useState('');
+  
+>>>>>>> master
   function updateProfile() {
     getProfile().then((profile) => {
       setFirstName(profile.firstName);

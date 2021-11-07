@@ -4,21 +4,11 @@ import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Happy from "../images/sample/happy.jpg";
-import {getResults} from '../fire/fire'
+import {getResults} from '../fire/fire';
+import '../styles/App.css';
 
 function PastResults() {
-  const defaultCard = (<Col>
-      <Card>
-        <Card.Img variant="top" src={Happy} />
-        <Card.Body>
-          <Card.Title>Happy</Card.Title>
-          <Card.Text>Uploaded on 9/27/2021 @ 12:00 am</Card.Text>
-        </Card.Body>
-      </Card>
-    </Col>)
-
-  const [cards, setCards] = useState(defaultCard)
+  const [cards, setCards] = useState('')
 
   useEffect(()=> {
     // console.log("hello?")
@@ -44,69 +34,37 @@ function PastResults() {
     })
   }, [])
 
-  return (
-    <Container>
-      <h2>Past Results</h2>
-      <a href="/">[ Download PDF ]</a>
-      <Row xs={1} sm={3} md={4} lg={5} class="g-4">
-        {cards}
-        {/* <Col>
-          <Card>
-            <Card.Img variant="top" src={Happy} />
-            <Card.Body>
-              <Card.Title>Happy</Card.Title>
-              <Card.Text>Uploaded on 9/27/2021 @ 12:00 am</Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col>
-          <Card>
-            <Card.Img variant="top" src={Sad} />
-            <Card.Body>
-              <Card.Title>Sad</Card.Title>
-              <Card.Text>Uploaded on 9/27/2021 @ 12:00 am</Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col>
-          <Card>
-            <Card.Img variant="top" src={Angry} />
-            <Card.Body>
-              <Card.Title>Angry</Card.Title>
-              <Card.Text>Uploaded on 9/27/2021 @ 12:00 am</Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col>
-          <Card>
-            <Card.Img variant="top" src={Happy} />
-            <Card.Body>
-              <Card.Title>Happy</Card.Title>
-              <Card.Text>Uploaded on 9/27/2021 @ 12:00 am</Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col>
-          <Card>
-            <Card.Img variant="top" src={Sad} />
-            <Card.Body>
-              <Card.Title>Sad</Card.Title>
-              <Card.Text>Uploaded on 9/27/2021 @ 12:00 am</Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col>
-          <Card>
-            <Card.Img variant="top" src={Angry} />
-            <Card.Body>
-              <Card.Title>Angry</Card.Title>
-              <Card.Text>Uploaded on 9/27/2021 @ 12:00 am</Card.Text>
-            </Card.Body>
-          </Card>
-        </Col> */}
-      </Row>
-    </Container>
-  );
+  if (!cards.length) // If no past results
+  {
+    return (
+      <div className="results-container">
+        <div className="results">
+          <p id="verification-paragraph">
+            <b>You do not have images to review!</b>
+          </p>
+          <p id="verification-paragraph">
+            If you would like to see images here, click
+          </p>
+          <p id="verification-paragraph">
+            the link below to go to the upload page!
+          </p>
+          <a id='detect-page-link' href='/detect'>Upload page</a>
+      </div>
+    </div>
+    )
+  }
+  else
+  {
+    return (
+      <Container>
+        <h2>Past Results</h2>
+        <a href="/">[ Download PDF ]</a>
+        <Row xs={1} sm={3} md={4} lg={5} class="g-4">
+          {cards}
+        </Row>
+      </Container>
+    );
+  }
 }
 
 export default withRouter(PastResults);
