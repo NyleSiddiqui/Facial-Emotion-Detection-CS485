@@ -172,9 +172,13 @@ function setProfile(firstName, lastName, photoLink) {
 }
 
 function verifyEmail() {
-  sendEmailVerification(auth.currentUser).then(() => {
-    console.log("Sending Verification Email");
-  });
+  sendEmailVerification(auth.currentUser)
+    .then(() => {
+      console.log("Sending Verification Email");
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 }
 
 function getProfile() {
