@@ -221,13 +221,21 @@ function uploadProfilePhoto(file) {
         let metadata = {
           contentType: file.type,
         };
-        uploadBytes(fileRef, file, metadata).then(() => {
-          console.log("File Uploaded");
-          fileRef = ref(storage, filepath);
-          getDownloadURL(fileRef).then((url) => {
-            resolve(url);
+        uploadBytes(fileRef, file, metadata)
+          .then(() => {
+            console.log("File Uploaded");
+            fileRef = ref(storage, filepath);
+            getDownloadURL(fileRef)
+              .then((url) => {
+                resolve(url);
+              })
+              .catch((error) => {
+                reject("Unable to fetch profile picture");
+              });
+          })
+          .catch((error) => {
+            reject("Unable to upload profile picture");
           });
-        });
       } else {
         reject("User not logged in!");
       }
