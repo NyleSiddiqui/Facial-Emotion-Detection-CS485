@@ -319,10 +319,15 @@ function resetPassword(email) {
   email = email["email"];
 
   return new Promise((resolve, reject) => {
-    sendPasswordResetEmail(auth, email).then(() => {
-      console.log("Sent login reset");
-      resolve();
-    });
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        console.log("Sent login reset");
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject("Password reset email was not able to be sent");
+      });
   });
 }
 
