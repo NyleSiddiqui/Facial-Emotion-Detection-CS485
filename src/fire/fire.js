@@ -150,6 +150,7 @@ function setProfile(firstName, lastName, photoLink) {
               resolve();
             })
             .catch((error) => {
+              console.error(error);
               reject("An error occurred when updating your profile");
             });
         } else {
@@ -161,6 +162,7 @@ function setProfile(firstName, lastName, photoLink) {
               resolve();
             })
             .catch((error) => {
+              console.error(error);
               reject("An error occurred when updating your profile");
             });
         }
@@ -230,10 +232,12 @@ function uploadProfilePhoto(file) {
                 resolve(url);
               })
               .catch((error) => {
+                console.error(error);
                 reject("Unable to fetch profile picture");
               });
           })
           .catch((error) => {
+            console.error(error);
             reject("Unable to upload profile picture");
           });
       } else {
@@ -269,6 +273,7 @@ function uploadPhoto(file) {
               });
           })
           .catch((error) => {
+            console.error(error);
             reject("Unable to upload picture");
           });
       } else {
@@ -295,12 +300,17 @@ function getResults() {
     onAuthStateChanged(auth, (user) => {
       const emotions = collection(db, "Emotions");
       const q = query(emotions, where("uid", "==", user.uid));
-      getDocs(q).then((results) => {
-        results.forEach((result) => {
-          resultList.push(result);
+      getDocs(q)
+        .then((results) => {
+          results.forEach((result) => {
+            resultList.push(result);
+          });
+          resolve(resultList);
+        })
+        .catch((error) => {
+          console.error(error);
+          reject("Unable to fetch past results");
         });
-        resolve(resultList);
-      });
     });
   });
 }
