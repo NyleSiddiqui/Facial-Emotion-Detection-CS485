@@ -279,9 +279,13 @@ function uploadPhoto(file) {
 }
 
 function logout() {
-  signOut(auth).then(() => {
-    console.log("Signed Out!");
-  });
+  signOut(auth)
+    .then(() => {
+      console.log("Signed Out!");
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 }
 
 function getResults() {
