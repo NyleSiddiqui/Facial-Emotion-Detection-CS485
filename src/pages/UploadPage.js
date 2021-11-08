@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import Dropzone from "react-dropzone";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -11,16 +11,20 @@ import Happy from "../images/sample/happy.jpg";
 import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {uploadPhoto, addEmotion} from '../fire/fire';
-// import * as tf from '@tensorflow/tfjs';
+import * as tf from '@tensorflow/tfjs';
 
 function UploadPage() {
-  //const model = tf.loadLayersModel('https:')
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
   const [alert, setAlert] = useState(null);
   const inputFileRef = useRef(null);
   const [show, setShow] = useState(false);
   const [file, setFile] = useState(null);
+  const [model, setModel] = useState();
+  console.log(model)
+  const url = {
+    model: 'https://facial-emotion-detection.netlify.app/model.json'
+  }
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -49,7 +53,6 @@ function UploadPage() {
   const handleDrop = (file) => {
     setImgSrc(URL.createObjectURL(file[0]));
     setFile(file[0]);
-
   };
 
   const handleDetect = () => {
@@ -61,6 +64,24 @@ function UploadPage() {
     handleShow();
     //setAlert("There was an error");
   };
+
+  async function loadModel(url) {
+    try {
+      const model = await tf.loadLayersModel(url.model);
+      setModel(model);
+      console.log("loaded model")
+    } 
+    catch (err) {
+      //console.log(model)
+      console.log(err);
+    }
+  }
+    
+  useEffect(()=>{
+    tf.ready().then(()=>{
+      loadModel(url)
+    });
+  })
 
   return (
     <>
