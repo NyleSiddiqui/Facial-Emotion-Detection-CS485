@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import Dropzone from "react-dropzone";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -11,10 +11,9 @@ import Happy from "../images/sample/happy.jpg";
 import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {uploadPhoto, addEmotion} from '../fire/fire';
-// import * as tf from '@tensorflow/tfjs';
+import * as tf from '@tensorflow/tfjs';
 
 function UploadPage() {
-  //const model = tf.loadLayersModel('https:')
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
   const [alert, setAlert] = useState(null);
@@ -86,7 +85,7 @@ function UploadPage() {
     tf.ready().then(() => {
       loadModel(url)
     });
-  })
+  }, [])
 
   return (
     <>
