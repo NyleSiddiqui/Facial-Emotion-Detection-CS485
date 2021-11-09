@@ -22,9 +22,6 @@ function UploadPage() {
   const [file, setFile] = useState(null);
   const [model, setModel] = useState();
   console.log(model)
-  const url = {
-    model: 'https://facial-emotion-detection.netlify.app/model.json'
-  }
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -65,23 +62,29 @@ function UploadPage() {
     //setAlert("There was an error");
   };
 
-  async function loadModel(url) {
+  const loadModel = async (url) => {
     try {
       const model = await tf.loadLayersModel(url.model);
+      model.summary();
       setModel(model);
       console.log("loaded model")
     } 
     catch (err) {
-      //console.log(model)
       console.log(err);
     }
   }
-    
-  useEffect(()=>{
-    tf.ready().then(()=>{
+
+  useEffect(() => {
+    // const url = {
+    //   model: 'https://facial-emotion-detection.netlify.app/model.json'
+    // }
+    const url = {
+      model: 'https://storage.googleapis.com/model-bucket69/model-content/model.json'
+    }
+    tf.ready().then(() => {
       loadModel(url)
     });
-  })
+  }, [])
 
   return (
     <>
