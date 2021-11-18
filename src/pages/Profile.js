@@ -1,21 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { withRouter } from "react-router";
+import { getProfile, setProfile, uploadProfilePhoto } from "../fire/fire";
+import Context from "../context";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Image from "react-bootstrap/Image";
-import {getProfile, setProfile, uploadProfilePhoto} from '../fire/fire'
+import Alert from "react-bootstrap/Alert";
 
 function Profile() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [photo, setPhoto] = useState('')
-  const [file, setFile] = useState('');
-  
+  const { notification, addNotification, removeNotification } =
+    useContext(Context);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [photo, setPhoto] = useState("");
+  const [file, setFile] = useState("");
+
   function updateProfile() {
-    getProfile().then(profile => {
+    getProfile().then((profile) => {
       setFirstName(profile.firstName);
       setLastName(profile.lastName);
       setEmail(profile.email);
@@ -29,24 +33,45 @@ function Profile() {
 
   function saveProfile(event) {
     event.preventDefault();
-    console.log({file})
-    let filename = {file}
-    console.log(filename['file'])
-    if(filename['file'] === '' || filename['file'] === undefined) {
-      setProfile({firstName}, {lastName}, '').then(() => {
-        updateProfile();
-      })      
-    } else {
-      uploadProfilePhoto({file}).then(url => {
-        setProfile({firstName}, {lastName}, url).then(() => {
+    let filename = { file };
+
+    if (filename["file"] === "" || filename["file"] === undefined) {
+      setProfile({ firstName }, { lastName }, "")
+        .then(() => {
           updateProfile();
         })
-      })
+        .catch((error) => {
+          addNotification(error, "danger");
+        });
+    } else {
+      uploadProfilePhoto({ file })
+        .then((url) => {
+          setProfile({ firstName }, { lastName }, url)
+            .then(() => {
+              updateProfile();
+            })
+            .catch((error) => {
+              addNotification(error, "danger");
+            });
+        })
+        .catch((error) => {
+          addNotification(error, "danger");
+        });
     }
   }
 
   return (
     <>
+      {Object.keys(notification).length !== 0 && (
+        <Alert
+          className="w-100"
+          variant={notification.type}
+          onClose={removeNotification}
+          dismissible
+        >
+          {notification.message}
+        </Alert>
+      )}
       <Row className="mt-4">
         <Col className="text-center align-middle" md={3}>
           <Image className="rounded-circle w-100" src={photo} />
@@ -76,11 +101,7 @@ function Profile() {
 
             <Form.Group className="mt-2">
               <Form.Label>Email:</Form.Label>
-              <Form.Control
-                type="email"
-                value={email}
-                disabled
-              />
+              <Form.Control type="email" value={email} disabled />
             </Form.Group>
 
             <Form.Group className="mt-2">
@@ -93,10 +114,20 @@ function Profile() {
 
             <Form.Group className="mt-2">
               <Form.Label>Edit profile picture:</Form.Label>
-              <Form.Control type="file" onChange={e => {setFile(e.target.files[0])}}/>
+              <Form.Control
+                type="file"
+                onChange={(e) => {
+                  setFile(e.target.files[0]);
+                }}
+              />
             </Form.Group>
 
-            <Button className="float-end mt-3" type="submit" variant="primary" onClick={saveProfile}>
+            <Button
+              className="float-end mt-3"
+              type="submit"
+              variant="primary"
+              onClick={saveProfile}
+            >
               Save
             </Button>
           </Form>
