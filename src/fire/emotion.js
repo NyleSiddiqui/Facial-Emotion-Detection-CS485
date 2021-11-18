@@ -1,5 +1,5 @@
 import * as tf from '@tensorflow/tfjs';
-import {getModelURL} from './f`ire'
+import {getModelURL} from './fire'
 
 let model = null
 
