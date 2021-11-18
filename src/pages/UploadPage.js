@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import Dropzone from "react-dropzone";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -10,7 +10,7 @@ import Webcam from "react-webcam";
 import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {uploadPhoto, addEmotion} from '../fire/fire';
-import {detectEmotion} from '../fire/emotion'
+import {detectEmotion, loadModel} from '../fire/emotion'
 
 function UploadPage() {
   const webcamRef = useRef(null);
@@ -23,6 +23,10 @@ function UploadPage() {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  useEffect(()=> {
+    loadModel();
+  }, [])
 
   const onFileChange = (e) => {
     setImgSrc(URL.createObjectURL(e.target.files[0]));

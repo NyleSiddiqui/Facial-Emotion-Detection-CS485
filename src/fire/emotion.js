@@ -1,10 +1,15 @@
 import * as tf from '@tensorflow/tfjs';
-import {getModelURL} from './fire'
+import {getModelURL} from './f`ire'
 
 let model = null
-getModel().then(loadedModel => {
-    model = loadedModel
-})
+
+function loadModel() {
+    getModel().then(loadedModel => {
+        model = loadedModel
+        let zeros = tf.fill([1, 224, 224, 3], 0)
+        model.predict(zeros);
+    })
+}
 
 function getModel() {
     return new Promise((resolve, reject) => {
@@ -77,4 +82,4 @@ function getTopThreeEmotions(results) {
     return topThree
 }
 
-export {getModel, detectEmotion}
+export {getModel, loadModel,detectEmotion}
