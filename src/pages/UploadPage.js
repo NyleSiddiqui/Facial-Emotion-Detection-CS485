@@ -1,17 +1,16 @@
-import React, { useRef, useState, useCallback, useEffect } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import Dropzone from "react-dropzone";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import Modal from "react-bootstrap/Modal";
-import Image from "react-bootstrap/Image";
+import ImageComp from "react-bootstrap/Image";
 import Webcam from "react-webcam";
-import Happy from "../images/sample/happy.jpg";
 import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {uploadPhoto, addEmotion} from '../fire/fire';
-import * as tf from '@tensorflow/tfjs';
+import {detectEmotion} from '../fire/emotion'
 
 function UploadPage() {
   const webcamRef = useRef(null);
@@ -20,8 +19,7 @@ function UploadPage() {
   const inputFileRef = useRef(null);
   const [show, setShow] = useState(false);
   const [file, setFile] = useState(null);
-  const [model, setModel] = useState();
-  console.log(model)
+  const [emotions, setEmotions] = useState(['NULL', 'NULL', 'NULL']);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -29,7 +27,7 @@ function UploadPage() {
   const onFileChange = (e) => {
     setImgSrc(URL.createObjectURL(e.target.files[0]));
     setFile(e.target.files[0]);
-    console.log(e.target.files[0]);
+    // console.log(e.target.files[0]);
   };
 
   const handleUploadFile = () => {
@@ -54,38 +52,34 @@ function UploadPage() {
   };
 
   const handleDetect = () => {
-    uploadPhoto({file}).then(res => {
-      console.log(res);
-      let emotion = prompt("Enter Detected Emotion");
-      addEmotion(res['url'], emotion)
-    })
-    handleShow();
+    
+    let file_ref = {file}
+    file_ref = file_ref['file']
+    if(file_ref === null) {
+      return;
+    }
+    let reader = new FileReader();
+    reader.addEventListener("load", () => {
+      let image = new Image();
+      image.width = 224
+      image.height = 224
+      image.src = reader.result;
+      image.onload = () => {
+        let emotions = detectEmotion(image);
+        if(emotions[0] !== 'NULL') {
+          setEmotions(emotions)
+          uploadPhoto({file}).then(res => {
+            addEmotion(res['url'], emotions[0].emotion)
+          })
+          handleShow();
+        }
+      }
+    }, false)
+
+    reader.readAsDataURL(file_ref)
+    
     //setAlert("There was an error");
   };
-
-  const loadModel = async (url) => {
-    try {
-      const model = await tf.loadLayersModel(url.model);
-      model.summary();
-      setModel(model);
-      console.log("loaded model")
-    } 
-    catch (err) {
-      console.log(err);
-    }
-  }
-
-  useEffect(() => {
-    // const url = {
-    //   model: 'https://facial-emotion-detection.netlify.app/model.json'
-    // }
-    const url = {
-      model: 'https://storage.googleapis.com/model-bucket69/model-content/model.json'
-    }
-    tf.ready().then(() => {
-      loadModel(url)
-    });
-  }, [])
 
   return (
     <>
@@ -156,17 +150,17 @@ function UploadPage() {
             <Modal.Body>
               <Row>
                 <Col md={6}>
-                  <Image fluid src={Happy} />
+                  <ImageComp fluid src={imgSrc} />
                 </Col>
                 <Col className="m-auto text-center" md={6}>
                   <h3 className="mb-0">The following emotion was detected:</h3>
-                  <h1 className="mt-0 huge">Happy</h1>
-                  <h4>80% accuracy</h4>
+                  <h1 className="mt-0 huge">{emotions[0].emotion}</h1>
+                  <h4>{emotions[0].conf}% confidence</h4>
                   <h3 className="mt-5">
                     <strong>Other emotions detected:</strong>
                   </h3>
-                  <h4>Excitement - 12%</h4>
-                  <h4>Anger - 8%</h4>
+                  <h4>{emotions[1].emotion} - {emotions[1].conf}%</h4>
+                  <h4>{emotions[2].emotion} - {emotions[2].conf}%</h4>
                 </Col>
               </Row>
             </Modal.Body>
