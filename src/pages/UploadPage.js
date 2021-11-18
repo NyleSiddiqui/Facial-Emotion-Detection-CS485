@@ -2,7 +2,6 @@ import React, { useRef, useState, useCallback, useContext, useEffect } from "rea
 import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { uploadPhoto, addEmotion } from "../fire/fire";
-import { detectEmotion } from "../fire/emotion";
 import Context from "../context";
 import Dropzone from "react-dropzone";
 import Row from "react-bootstrap/Row";
