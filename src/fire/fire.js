@@ -25,8 +25,7 @@ const storage = getStorage();
 const db = getFirestore();
 
 function addEmotion(filename, classifiedEmotion) {
-  
-  
+
   onAuthStateChanged(auth, (user) => {
     try {
       let date = new Date()
@@ -125,7 +124,6 @@ function getProfile() {
   let profile = {}
   return new Promise((resolve, reject) => {
     onAuthStateChanged(auth, (user) => {
-    console.log(user)
     if(user) {
       let names = user.displayName.split(' ');
       profile = {
@@ -202,6 +200,18 @@ function uploadPhoto(file) {
   });
 }
 
+function getModelURL() {
+  return new Promise((resolve, reject) => {
+    let filepath = "model/model.json";
+    let fileRef = ref(storage, filepath)
+    getDownloadURL(fileRef).then(url => {
+      // console.log(url)
+      // resolve(url)
+      resolve("https://storage.googleapis.com/model-bucket69/model/model.json")
+    })
+}) 
+}
+
 function logout() {
   signOut(auth).then(() => {
     console.log("Signed Out!")
@@ -238,4 +248,4 @@ function resetPassword(email) {
 
 export { loginUser, createAccount, verifyEmail, setProfile,
    getProfile, uploadProfilePhoto, uploadPhoto, logout, addEmotion, getResults, isAuthenticated, 
-   resetPassword};
+   resetPassword, getModelURL};
