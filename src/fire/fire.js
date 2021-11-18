@@ -283,6 +283,18 @@ function uploadPhoto(file) {
   });
 }
 
+function getModelURL() {
+  return new Promise((resolve, reject) => {
+    let filepath = "model/model.json";
+    let fileRef = ref(storage, filepath);
+    getDownloadURL(fileRef).then((url) => {
+      // console.log(url)
+      // resolve(url)
+      resolve("https://storage.googleapis.com/model-bucket69/model/model.json");
+    });
+  });
+}
+
 function logout() {
   signOut(auth)
     .then(() => {
@@ -344,4 +356,5 @@ export {
   getResults,
   isAuthenticated,
   resetPassword,
+  getModelURL,
 };
