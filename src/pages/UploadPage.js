@@ -1,4 +1,9 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useContext } from "react";
+import { withRouter } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { uploadPhoto, addEmotion } from "../fire/fire";
+import { detectEmotion } from "../fire/emotion";
+import Context from "../context";
 import Dropzone from "react-dropzone";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -7,19 +12,16 @@ import Alert from "react-bootstrap/Alert";
 import Modal from "react-bootstrap/Modal";
 import ImageComp from "react-bootstrap/Image";
 import Webcam from "react-webcam";
-import { withRouter } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {uploadPhoto, addEmotion} from '../fire/fire';
-import {detectEmotion} from '../fire/emotion'
 
 function UploadPage() {
+  const { notification, addNotification, removeNotification } =
+    useContext(Context);
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
-  const [alert, setAlert] = useState(null);
   const inputFileRef = useRef(null);
   const [show, setShow] = useState(false);
   const [file, setFile] = useState(null);
-  const [emotions, setEmotions] = useState(['NULL', 'NULL', 'NULL']);
+  const [emotions, setEmotions] = useState(["NULL", "NULL", "NULL"]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -37,12 +39,13 @@ function UploadPage() {
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImgSrc(imageSrc);
-    
-    fetch(imageSrc).then(res => res.blob()).then(blob => {
-      let screenshot = new File([blob], "test.jpg", {type:'image/jpeg'})
-      setFile(screenshot);
-    })
-    
+
+    fetch(imageSrc)
+      .then((res) => res.blob())
+      .then((blob) => {
+        let screenshot = new File([blob], "test.jpg", { type: "image/jpeg" });
+        setFile(screenshot);
+      });
   }, [webcamRef, setImgSrc]);
 
   const handleDrop = (file) => {
@@ -51,41 +54,52 @@ function UploadPage() {
   };
 
   const handleDetect = () => {
-    
-    let file_ref = {file}
-    file_ref = file_ref['file']
-    if(file_ref === null) {
+    let file_ref = { file };
+    file_ref = file_ref["file"];
+    if (file_ref === null) {
       return;
     }
     let reader = new FileReader();
-    reader.addEventListener("load", () => {
-      let image = new Image();
-      image.width = 224
-      image.height = 224
-      image.src = reader.result;
-      image.onload = () => {
-        let emotions = detectEmotion(image);
-        if(emotions[0] !== 'NULL') {
-          setEmotions(emotions)
-          uploadPhoto({file}).then(res => {
-            addEmotion(res['url'], emotions[0].emotion)
-          })
-          handleShow();
-        }
-      }
-    }, false)
+    reader.addEventListener(
+      "load",
+      () => {
+        let image = new Image();
+        image.width = 224;
+        image.height = 224;
+        image.src = reader.result;
+        image.onload = () => {
+          let emotions = detectEmotion(image);
+          if (emotions[0] !== "NULL") {
+            setEmotions(emotions);
+            uploadPhoto({ file })
+              .then((res) => {
+                addEmotion(res["url"], emotions[0].emotion);
+              })
+              .catch((error) => {
+                addNotification(error, "danger");
+              });
+            handleShow();
+          }
+        };
+      },
+      false
+    );
 
-    reader.readAsDataURL(file_ref)
-    
+    reader.readAsDataURL(file_ref);
+
     //setAlert("There was an error");
   };
 
   return (
     <>
-      {alert && (
-        <Alert variant="danger" onClose={() => setAlert(null)} dismissible>
-          The model was unable to detect an emotion from your image. Please
-          upload a new one.
+      {Object.keys(notification).length !== 0 && (
+        <Alert
+          className="w-100"
+          variant={notification.type}
+          onClose={removeNotification}
+          dismissible
+        >
+          {notification.message}
         </Alert>
       )}
 
@@ -158,8 +172,12 @@ function UploadPage() {
                   <h3 className="mt-5">
                     <strong>Other emotions detected:</strong>
                   </h3>
-                  <h4>{emotions[1].emotion} - {emotions[1].conf}%</h4>
-                  <h4>{emotions[2].emotion} - {emotions[2].conf}%</h4>
+                  <h4>
+                    {emotions[1].emotion} - {emotions[1].conf}%
+                  </h4>
+                  <h4>
+                    {emotions[2].emotion} - {emotions[2].conf}%
+                  </h4>
                 </Col>
               </Row>
             </Modal.Body>
