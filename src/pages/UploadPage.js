@@ -1,8 +1,7 @@
-import React, { useRef, useState, useCallback, useContext } from "react";
+import React, { useRef, useState, useCallback, useContext, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { uploadPhoto, addEmotion } from "../fire/fire";
-import { detectEmotion } from "../fire/emotion";
 import Context from "../context";
 import Dropzone from "react-dropzone";
 import Row from "react-bootstrap/Row";
@@ -12,6 +11,7 @@ import Alert from "react-bootstrap/Alert";
 import Modal from "react-bootstrap/Modal";
 import ImageComp from "react-bootstrap/Image";
 import Webcam from "react-webcam";
+import {detectEmotion, loadModel} from '../fire/emotion'
 
 function UploadPage() {
   const { notification, addNotification, removeNotification } =
@@ -25,6 +25,10 @@ function UploadPage() {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  useEffect(()=> {
+    loadModel();
+  }, [])
 
   const onFileChange = (e) => {
     setImgSrc(URL.createObjectURL(e.target.files[0]));
