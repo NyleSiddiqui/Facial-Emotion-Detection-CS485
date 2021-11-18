@@ -48,7 +48,6 @@ function UploadPage() {
   const handleDrop = (file) => {
     setImgSrc(URL.createObjectURL(file[0]));
     setFile(file[0]);
-
   };
 
   const handleDetect = () => {
