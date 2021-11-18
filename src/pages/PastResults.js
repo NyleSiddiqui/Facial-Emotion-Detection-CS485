@@ -42,11 +42,11 @@ function PastResults() {
       {results.length !== 0 ? (
         <>
           <a href="/">[ Download PDF ]</a>
-          <Row xs={1} sm={3} md={4} lg={5} class="g-4">
-            {results.map((result) => {
+          <Row xs={1} sm={3} md={4} lg={5} className="g-4">
+            {results.map((result, idx) => {
               result = result.data();
               return (
-                <Col>
+                <Col key={idx}>
                   <Card>
                     <Card.Img variant="top" src={result.img} />
                     <Card.Body>

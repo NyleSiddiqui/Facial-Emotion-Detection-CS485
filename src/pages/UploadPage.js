@@ -12,7 +12,6 @@ import Alert from "react-bootstrap/Alert";
 import Modal from "react-bootstrap/Modal";
 import ImageComp from "react-bootstrap/Image";
 import Webcam from "react-webcam";
-import Happy from "../images/sample/happy.jpg";
 
 function UploadPage() {
   const { notification, addNotification, removeNotification } =
