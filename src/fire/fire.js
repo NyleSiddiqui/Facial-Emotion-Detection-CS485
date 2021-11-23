@@ -290,7 +290,7 @@ function getModelURL() {
     getDownloadURL(fileRef).then((url) => {
       // console.log(url)
       // resolve(url)
-      resolve("https://storage.googleapis.com/model-bucket69/model/model.json");
+      resolve("https://storage.googleapis.com/model-bucket69/weighted-model/model.json");
     });
   });
 }
