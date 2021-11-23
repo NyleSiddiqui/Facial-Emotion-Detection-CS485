@@ -2,6 +2,7 @@ import React, { useRef, useState, useCallback, useContext, useEffect } from "rea
 import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { uploadPhoto, addEmotion } from "../fire/fire";
+import {detectEmotion, loadModel} from '../fire/emotion'
 import Context from "../context";
 import Dropzone from "react-dropzone";
 import Row from "react-bootstrap/Row";
@@ -11,18 +12,21 @@ import Alert from "react-bootstrap/Alert";
 import Modal from "react-bootstrap/Modal";
 import ImageComp from "react-bootstrap/Image";
 import Webcam from "react-webcam";
-import {detectEmotion, loadModel} from '../fire/emotion'
+import getCroppedImg from '../image-crop/crop.js';
+import ReactCrop from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 
 function UploadPage() {
   const { notification, addNotification, removeNotification } =
     useContext(Context);
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
+  const [cropImgObj, setCropImgObj] = useState(null);
   const inputFileRef = useRef(null);
   const [show, setShow] = useState(false);
-  const [file, setFile] = useState(null);
-  const [emotions, setEmotions] = useState(["NULL", "NULL", "NULL"]);
-
+  const [crop, setCrop] = useState({ aspect: 1/1, width: 224, height: 224, keepSelection: true });
+  const [cropImgSrc, setCropImgSrc] = useState(null);
+  const [emotions, setEmotions] = useState(['NULL', 'NULL', 'NULL']);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -32,8 +36,6 @@ function UploadPage() {
 
   const onFileChange = (e) => {
     setImgSrc(URL.createObjectURL(e.target.files[0]));
-    setFile(e.target.files[0]);
-    // console.log(e.target.files[0]);
   };
 
   const handleUploadFile = () => {
@@ -43,55 +45,70 @@ function UploadPage() {
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImgSrc(imageSrc);
-
-    fetch(imageSrc)
-      .then((res) => res.blob())
-      .then((blob) => {
-        let screenshot = new File([blob], "test.jpg", { type: "image/jpeg" });
-        setFile(screenshot);
-      });
   }, [webcamRef, setImgSrc]);
 
   const handleDrop = (file) => {
     setImgSrc(URL.createObjectURL(file[0]));
-    setFile(file[0]);
   };
 
+  /**
+   * Store the crop image object when loaded
+   */
+  const onCropLoad = (image) => {
+    setCropImgObj(image)
+  }
+
+  /**
+   * Store the current crop data when changed
+   */
+  const onCropChange = (crop) => {
+    setCrop(crop)
+  }
+
+  /**
+   * Image Detection System
+   * 
+   * Crop the image, detect the emotion, and upload it to Firebase
+   */
   const handleDetect = () => {
-    let file_ref = { file };
-    file_ref = file_ref["file"];
-    if (file_ref === null) {
-      return;
-    }
-    let reader = new FileReader();
-    reader.addEventListener(
-      "load",
-      () => {
-        let image = new Image();
-        image.width = 224;
-        image.height = 224;
-        image.src = reader.result;
-        image.onload = () => {
-          let emotions = detectEmotion(image);
-          if (emotions[0] !== "NULL") {
-            setEmotions(emotions);
-            uploadPhoto({ file })
-              .then((res) => {
-                addEmotion(res["url"], emotions[0].emotion);
-              })
-              .catch((error) => {
-                addNotification(error, "danger");
-              });
-            handleShow();
-          }
-        };
-      },
-      false
-    );
+    // Crop the image
+    getCroppedImg(cropImgObj, crop, 'upload.jpg').then((cropBlobObj) => {
 
-    reader.readAsDataURL(file_ref);
+      // Set the cropped image we are using.
+      setCropImgSrc(window.URL.createObjectURL(cropBlobObj))
 
-    //setAlert("There was an error");
+      // Load the image and run it through the detection system.
+      let reader = new FileReader();
+      reader.addEventListener("load", () => {
+          let image = new Image();
+          image.width = 224;
+          image.height = 224;
+          image.src = reader.result;
+          image.onload = () => {
+            let emotions = detectEmotion(image);
+            if (emotions[0] !== "NULL") {
+              setEmotions(emotions);
+
+              // Upload the photo to Firebase
+              uploadPhoto({ file: cropBlobObj })
+                .then((res) => {
+                  addEmotion(res["url"], emotions[0].emotion);
+                })
+                .catch((error) => {
+                  addNotification(error, "danger");
+                });
+
+              // Show the results
+              handleShow();
+            }
+          };
+        },
+        false
+      );
+
+      // Read in the cropped file
+      reader.readAsDataURL(cropBlobObj);
+    })
   };
 
   return (
@@ -124,7 +141,14 @@ function UploadPage() {
           <div className="upload-container">
             <div className="drop-container">
               {imgSrc ? (
-                <img src={imgSrc} alt="Capture" />
+                <div className="crop-container">
+                  <ReactCrop
+                    src={imgSrc}
+                    crop={crop}
+                    onImageLoaded={onCropLoad}
+                    onChange={onCropChange}
+                  />
+                </div>
               ) : (
                 <Dropzone
                   onDrop={handleDrop}
@@ -167,7 +191,7 @@ function UploadPage() {
             <Modal.Body>
               <Row>
                 <Col md={6}>
-                  <ImageComp fluid src={imgSrc} />
+                  <ImageComp fluid src={cropImgSrc} />
                 </Col>
                 <Col className="m-auto text-center" md={6}>
                   <h3 className="mb-0">The following emotion was detected:</h3>

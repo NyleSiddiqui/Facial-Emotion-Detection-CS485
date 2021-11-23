@@ -87,6 +87,16 @@ body {
   height: 480px;
 }
 
+.crop-container {
+  position: relative;
+  height: 440px;
+  text-align: center;
+}
+
+.crop-container img {
+  max-height: 440px;
+}
+
 .upload-container {
   display: flex;
   flex-direction: column;
