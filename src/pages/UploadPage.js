@@ -1,7 +1,15 @@
-import React, { useRef, useState, useCallback, useContext, useEffect } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {
+  useRef,
+  useState,
+  useCallback,
+  useContext,
+  useEffect,
+} from "react";
 import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { uploadPhoto, addEmotion } from "../fire/fire";
+import { uploadPhoto, addEmotion, isAuthenticated } from "../fire/fire";
+import { useHistory } from "react-router-dom";
 import Context from "../context";
 import Dropzone from "react-dropzone";
 import Row from "react-bootstrap/Row";
@@ -11,9 +19,10 @@ import Alert from "react-bootstrap/Alert";
 import Modal from "react-bootstrap/Modal";
 import ImageComp from "react-bootstrap/Image";
 import Webcam from "react-webcam";
-import {detectEmotion, loadModel} from '../fire/emotion'
+import { detectEmotion, loadModel } from "../fire/emotion";
 
 function UploadPage() {
+  const history = useHistory();
   const { notification, addNotification, removeNotification } =
     useContext(Context);
   const webcamRef = useRef(null);
@@ -26,9 +35,15 @@ function UploadPage() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  useEffect(()=> {
-    loadModel();
-  }, [])
+  useEffect(() => {
+    isAuthenticated().then((auth) => {
+      if (auth) {
+        loadModel();
+      } else {
+        history.push("/login");
+      }
+    });
+  }, []);
 
   const onFileChange = (e) => {
     setImgSrc(URL.createObjectURL(e.target.files[0]));
