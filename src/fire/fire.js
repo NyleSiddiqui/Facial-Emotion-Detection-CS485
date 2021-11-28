@@ -187,7 +187,6 @@ function getProfile() {
   let profile = {};
   return new Promise((resolve, reject) => {
     onAuthStateChanged(auth, (user) => {
-      console.log(user);
       if (user) {
         let names = user.displayName.split(" ");
         profile = {
@@ -290,7 +289,9 @@ function getModelURL() {
     getDownloadURL(fileRef).then((url) => {
       // console.log(url)
       // resolve(url)
-      resolve("https://storage.googleapis.com/model-bucket69/weighted-model/model.json");
+      resolve(
+        "https://storage.googleapis.com/model-bucket69/weighted-model/model.json"
+      );
     });
   });
 }

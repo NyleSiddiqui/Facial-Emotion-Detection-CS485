@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useContext } from "react";
-import { withRouter } from "react-router-dom";
-import { getResults } from "../fire/fire";
+import { useHistory, withRouter } from "react-router-dom";
+import { getResults, isAuthenticated } from "../fire/fire";
 import Context from "../context";
 import Container from "react-bootstrap/Container";
 import Alert from "react-bootstrap/Alert";
@@ -11,19 +11,26 @@ import Col from "react-bootstrap/Col";
 import "../styles/App.css";
 
 function PastResults() {
+  const history = useHistory();
   const { notification, addNotification, removeNotification } =
     useContext(Context);
 
   const [results, setResults] = useState([]);
 
   useEffect(() => {
-    getResults()
-      .then((res) => {
-        setResults(res);
-      })
-      .catch((error) => {
-        addNotification(error, "danger");
-      });
+    isAuthenticated().then((auth) => {
+      if (auth) {
+        getResults()
+          .then((res) => {
+            setResults(res);
+          })
+          .catch((error) => {
+            addNotification(error, "danger");
+          });
+      } else {
+        history.push("/login");
+      }
+    });
   }, []);
 
   return (

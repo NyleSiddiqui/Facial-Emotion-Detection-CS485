@@ -1,6 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useContext } from "react";
 import { withRouter } from "react-router";
-import { getProfile, setProfile, uploadProfilePhoto } from "../fire/fire";
+import { useHistory } from "react-router-dom";
+import {
+  getProfile,
+  setProfile,
+  uploadProfilePhoto,
+  isAuthenticated,
+} from "../fire/fire";
 import Context from "../context";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -10,6 +17,7 @@ import Image from "react-bootstrap/Image";
 import Alert from "react-bootstrap/Alert";
 
 function Profile() {
+  const history = useHistory();
   const { notification, addNotification, removeNotification } =
     useContext(Context);
   const [firstName, setFirstName] = useState("");
@@ -28,7 +36,13 @@ function Profile() {
   }
 
   useEffect(() => {
-    updateProfile();
+    isAuthenticated().then((auth) => {
+      if (auth) {
+        updateProfile();
+      } else {
+        history.push("/login");
+      }
+    });
   }, []);
 
   function saveProfile(event) {
