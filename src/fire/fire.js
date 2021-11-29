@@ -18,6 +18,7 @@ import {
   where,
   query,
   getDocs,
+  orderBy,
 } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -312,7 +313,7 @@ function getResults() {
   return new Promise((resolve, reject) => {
     onAuthStateChanged(auth, (user) => {
       const emotions = collection(db, "Emotions");
-      const q = query(emotions, where("uid", "==", user.uid));
+      const q = query(emotions, where("uid", "==", user.uid), orderBy("time", "desc"));
       getDocs(q)
         .then((results) => {
           results.forEach((result) => {
