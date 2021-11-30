@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Page,
   Text,
@@ -8,8 +8,6 @@ import {
   Image
 } from "@react-pdf/renderer";
 import { getResults } from "../fire/fire";
-import Context from "../context";
-import { AuthErrorCodes } from "@firebase/auth";
 
 // Create styles
 const styles = StyleSheet.create({
@@ -36,9 +34,6 @@ const styles = StyleSheet.create({
 
 // Create Document Component
 export function PdfDocument() {
-  const { notification, addNotification, removeNotification } =
-    useContext(Context);
-
   const [results, setResults] = useState([]);
 
   useEffect(() => {
@@ -46,9 +41,6 @@ export function PdfDocument() {
       .then((res) => {
         setResults(res);
       })
-      .catch((error) => {
-        addNotification(error, "danger");
-      });
   }, []);
 
   return (
