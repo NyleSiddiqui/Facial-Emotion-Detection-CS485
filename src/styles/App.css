@@ -55,8 +55,20 @@ body {
   border-radius: 80%;
 }
 
+.loading-icon {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .nav-link {
   color: azure !important;
+}
+
+.footer {
+  margin-top: 20px;
 }
 
 #copyright-symbol {
@@ -166,6 +178,11 @@ body {
 
 .create-account .btn-submit {
   margin-top: .5em;
+}
+
+.pdf-download {
+  padding-top: 10m;
+  padding-bottom: 10m;
 }
 
 .results-container {

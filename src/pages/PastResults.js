@@ -8,6 +8,8 @@ import Alert from "react-bootstrap/Alert";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { PdfDocument } from "../components/ResultsPdf";
 import "../styles/App.css";
 
 function PastResults() {
@@ -41,7 +43,21 @@ function PastResults() {
       <h2>Past Results</h2>
       {results.length !== 0 ? (
         <>
-          <a href="/">[ Download PDF ]</a>
+          {<PDFDownloadLink
+            document={<PdfDocument data={results} />}
+            fileName="emotion-results.pdf"
+            style={{
+              textDecoration: "none",
+              padding: "10px",
+              color: "#4a4a4a",
+              backgroundColor: "#f2f2f2",
+              border: "1px solid #4a4a4a"
+            }}
+          >
+            {({ blob, url, loading, error }) =>
+              loading ? "Loading document..." : "Download Pdf"
+            }
+          </PDFDownloadLink>}
           <Row xs={1} sm={3} md={4} lg={5} className="g-4">
             {results.map((result, idx) => {
               result = result.data();
