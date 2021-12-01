@@ -298,13 +298,17 @@ function getModelURL() {
 }
 
 function logout() {
-  signOut(auth)
-    .then(() => {
-      console.log("Signed Out!");
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  return new Promise((resolve, reject) => {
+    signOut(auth)
+      .then(() => {
+        console.log("Signed Out!");
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
 }
 
 function getResults() {
@@ -313,7 +317,11 @@ function getResults() {
   return new Promise((resolve, reject) => {
     onAuthStateChanged(auth, (user) => {
       const emotions = collection(db, "Emotions");
-      const q = query(emotions, where("uid", "==", user.uid), orderBy("time", "desc"));
+      const q = query(
+        emotions,
+        where("uid", "==", user.uid),
+        orderBy("time", "desc")
+      );
       getDocs(q)
         .then((results) => {
           results.forEach((result) => {

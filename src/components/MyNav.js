@@ -22,9 +22,9 @@ const MyNav = () => {
     }
   });
 
-  function signOut(event) {
+  async function signOut(event) {
     event.preventDefault();
-    logout();
+    await logout();
     history.push("/");
   }
 
