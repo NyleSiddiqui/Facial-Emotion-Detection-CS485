@@ -6,7 +6,7 @@ import '../styles/App.css';
 
 const Footer = () => {
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" position='relative'>
+    <Navbar className='footer' bg="dark" variant="dark" expand="lg" position='relative'>
       <Container>
         <Nav className='footer-item'>
           <Nav.Link href="/tos">Terms of Service</Nav.Link>
