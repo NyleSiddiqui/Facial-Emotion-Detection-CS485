@@ -55,26 +55,22 @@ function PastResults() {
               {notification.message}
             </Alert>
           )}
-          <h2>Past Results</h2>
           {results.length !== 0 ? (
             <>
-              {
-                <PDFDownloadLink
-                  document={<PdfDocument data={results} />}
-                  fileName="emotion-results.pdf"
-                  style={{
-                    textDecoration: "none",
-                    padding: "10px",
-                    color: "#4a4a4a",
-                    backgroundColor: "#f2f2f2",
-                    border: "1px solid #4a4a4a",
-                  }}
-                >
-                  {({ blob, url, loading, error }) =>
-                    loading ? "Loading document..." : "Download Pdf"
-                  }
-                </PDFDownloadLink>
-              }
+              <div className="d-flex justify-content-between align-items-center my-3">
+                <h2>Past Results</h2>
+                {
+                  <PDFDownloadLink
+                    document={<PdfDocument data={results} />}
+                    fileName="emotion-results.pdf"
+                    className="btn btn-primary"
+                  >
+                    {({ blob, url, loading, error }) =>
+                      loading ? "Loading document..." : "Download PDF"
+                    }
+                  </PDFDownloadLink>
+                }
+              </div>
               <Row xs={1} sm={3} md={4} lg={5} className="g-4">
                 {results.map((result, idx) => {
                   result = result.data();
