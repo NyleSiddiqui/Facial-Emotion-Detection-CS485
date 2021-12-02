@@ -35,10 +35,29 @@ function CreateAccount() {
   const [verifyPassword, setVerifyPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [privacyPolicy, setPrivacyPolicy] = useState(false);
   const [file, setFile] = useState("");
 
   const handleCreate = (event) => {
     event.preventDefault();
+    if (
+      email === "" ||
+      password === "" ||
+      verifyPassword === "" ||
+      firstName === "" ||
+      lastName === "" ||
+      file === "" ||
+      !file
+    ) {
+      addNotification("Please fill out all fields.", "danger");
+      return;
+    }
+
+    if (!privacyPolicy) {
+      addNotification("Please agree to the privacy policy.", "danger");
+      return;
+    }
+
     if (verifyPassword !== password) {
       addNotification("Passwords do not match.", "danger");
       return;
@@ -169,7 +188,15 @@ function CreateAccount() {
               </Form.Group>
               <br />
               <Form.Group>
-                <Form.Check inline required /> I agree to the{" "}
+                <Form.Check
+                  value={privacyPolicy}
+                  onChange={() => {
+                    setPrivacyPolicy(!privacyPolicy);
+                  }}
+                  inline
+                  required
+                />
+                I agree to the{" "}
                 <a href="/privacy_policy" target="_blank">
                   Privacy Policy
                 </a>
