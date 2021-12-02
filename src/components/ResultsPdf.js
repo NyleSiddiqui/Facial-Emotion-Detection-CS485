@@ -13,22 +13,32 @@ import { getResults } from "../fire/fire";
 const styles = StyleSheet.create({
   page: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     backgroundColor: '#E4E4E4',
     paddingTop: '10m',
     paddingHorizontal: '10m',
+    textAlign: 'center',
+    alignItems: 'flex-start'
+  },
+  title: {
+    flexBasis: '100%',
+    marginBottom: '2m',
   },
   container: {
+    border: '1px solid #AAAAAA',
+    flexBasis: '32%',
+    margin: '1m',
+    marginBottom: '10m',
     padding: '5m'
   },
   image: {
-    height: '224px',
-    width: '224px',
+    width: '100%',
+    maxHeight: '224px',
     paddingBottom: '1m',
   },
   upload_date: {
-    flexWrap: 'wrap',
-    paddingRight: '10m',
+    fontSize: '12pt'
   }
 });
 
@@ -46,14 +56,15 @@ export function PdfDocument() {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
+        <Text style={styles.title}>Facial Emotion Detection - Past Results</Text>
         {results.map((result, idx) => {
             result = result.data();
             return (
               <>
-                <View style={styles.container} key={idx}>
+                <View style={styles.container} key={idx} {...(idx % 9 === 0 && idx !== 0) ? {break: true}  : {}}>
                   <Image style={styles.image} src={result.img} />
                   <Text>{result.emotion}</Text>
-                  <Text>Uploaded on {result.time}</Text>
+                  <Text style={styles.upload_date}>Uploaded on {result.time}</Text>
                 </View>
               </>
             );
