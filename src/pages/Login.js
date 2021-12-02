@@ -1,7 +1,8 @@
-import React, { useState, useContext } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useContext, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { loginUser } from "../fire/fire";
+import { loginUser, isAuthenticated } from "../fire/fire";
 import Context from "../context";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -12,6 +13,14 @@ function Login({ history }) {
     useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    isAuthenticated().then((auth) => {
+      if (auth) {
+        history.push("/detect");
+      }
+    });
+  }, []);
 
   function login(event) {
     event.preventDefault();

@@ -188,7 +188,6 @@ function getProfile() {
   let profile = {};
   return new Promise((resolve, reject) => {
     onAuthStateChanged(auth, (user) => {
-      console.log(user);
       if (user) {
         let names = user.displayName.split(" ");
         profile = {
@@ -291,19 +290,25 @@ function getModelURL() {
     getDownloadURL(fileRef).then((url) => {
       // console.log(url)
       // resolve(url)
-      resolve("https://storage.googleapis.com/model-bucket69/weighted-model/model.json");
+      resolve(
+        "https://storage.googleapis.com/model-bucket69/weighted-model/model.json"
+      );
     });
   });
 }
 
 function logout() {
-  signOut(auth)
-    .then(() => {
-      console.log("Signed Out!");
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  return new Promise((resolve, reject) => {
+    signOut(auth)
+      .then(() => {
+        console.log("Signed Out!");
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
 }
 
 function getResults() {
@@ -312,7 +317,11 @@ function getResults() {
   return new Promise((resolve, reject) => {
     onAuthStateChanged(auth, (user) => {
       const emotions = collection(db, "Emotions");
-      const q = query(emotions, where("uid", "==", user.uid), orderBy("time", "desc"));
+      const q = query(
+        emotions,
+        where("uid", "==", user.uid),
+        orderBy("time", "desc")
+      );
       getDocs(q)
         .then((results) => {
           results.forEach((result) => {

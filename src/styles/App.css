@@ -56,7 +56,6 @@ body {
 }
 
 .loading-icon {
-  width: 100vw;
   height: 100vh;
   display: flex;
   align-items: center;
@@ -133,7 +132,7 @@ body {
   align-items: center;
   flex-direction: column;
   min-width: 500px;
-  background-color: rgb(212, 212, 212);;
+  background-color: rgb(212, 212, 212);
   padding: 50px 0px;
   border-radius: 10px;
 }
@@ -173,11 +172,11 @@ body {
 }
 
 .create-account h3 {
-  padding-bottom: .75em;
+  padding-bottom: 0.75em;
 }
 
 .create-account .btn-submit {
-  margin-top: .5em;
+  margin-top: 0.5em;
 }
 
 .pdf-download {
