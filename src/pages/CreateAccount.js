@@ -32,26 +32,36 @@ function CreateAccount() {
     useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [verifyPassword, setVerifyPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [file, setFile] = useState("");
 
   const handleCreate = (event) => {
     event.preventDefault();
-    createAccount({ email }, { password })
-      .then(() => {
-        uploadProfilePhoto({ file })
-          .then((url) => {
-            setProfile({ firstName }, { lastName }, url);
-            history.push("/verification");
-          })
-          .catch((error) => {
-            addNotification(error, "danger");
-          });
-      })
-      .catch((error) => {
-        addNotification(error, "danger");
-      });
+    if (verifyPassword !== password) {
+      addNotification("Passwords do not match.", "danger");
+      return;
+    }
+
+    if (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}/.test(password)) {
+      createAccount({ email }, { password })
+        .then(() => {
+          uploadProfilePhoto({ file })
+            .then((url) => {
+              setProfile({ firstName }, { lastName }, url);
+              history.push("/verification");
+            })
+            .catch((error) => {
+              addNotification(error, "danger");
+            });
+        })
+        .catch((error) => {
+          addNotification(error, "danger");
+        });
+    } else {
+      addNotification("Password does not meet requirements.", "danger");
+    }
   };
 
   return (
@@ -110,7 +120,14 @@ function CreateAccount() {
 
               <Form.Group>
                 <Form.Label>Retype Password</Form.Label>
-                <Form.Control type="password" required />
+                <Form.Control
+                  type="password"
+                  value={verifyPassword}
+                  onInput={(e) => {
+                    setVerifyPassword(e.target.value);
+                  }}
+                  required
+                />
               </Form.Group>
             </Col>
 

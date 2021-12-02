@@ -131,7 +131,7 @@ function Profile() {
                   <Form.Label>Password:</Form.Label>
                   <Form.Control type="password" value="password123" disabled />
                   <Form.Text>
-                    <a href="/">Reset password</a>
+                    <a href="/forgotpass">Reset password</a>
                   </Form.Text>
                 </Form.Group>
 
