@@ -29,7 +29,7 @@ function PastResults() {
   }, []);
 
   return (
-    <Container>
+    <Container className="position-relative mt-3">
       {Object.keys(notification).length !== 0 && (
         <Alert
           className="w-100"
@@ -50,15 +50,18 @@ function PastResults() {
               textDecoration: "none",
               padding: "10px",
               color: "#4a4a4a",
+              position: "absolute",
+              right: "0px",
+              top: "0px",
               backgroundColor: "#f2f2f2",
               border: "1px solid #4a4a4a"
             }}
           >
             {({ blob, url, loading, error }) =>
-              loading ? "Loading document..." : "Download Pdf"
+              loading ? "Loading document..." : "Download PDF"
             }
           </PDFDownloadLink>}
-          <Row xs={1} sm={3} md={4} lg={5} className="g-4">
+          <Row xs={1} sm={3} md={4} lg={5} className="g-4 mt-1">
             {results.map((result, idx) => {
               result = result.data();
               return (
