@@ -56,6 +56,7 @@ function Profile() {
       setProfile({ firstName }, { lastName }, "")
         .then(() => {
           updateProfile();
+          addNotification("Profile updated.", "success");
         })
         .catch((error) => {
           addNotification(error, "danger");
@@ -66,6 +67,7 @@ function Profile() {
           setProfile({ firstName }, { lastName }, url)
             .then(() => {
               updateProfile();
+              addNotification("Profile updated.", "success");
             })
             .catch((error) => {
               addNotification(error, "danger");
