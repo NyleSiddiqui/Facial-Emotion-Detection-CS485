@@ -19,6 +19,7 @@ import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import Modal from "react-bootstrap/Modal";
 import ImageComp from "react-bootstrap/Image";
+import LoadingScreen from "../components/LoadingScreen";
 import Webcam from "react-webcam";
 import getCroppedImg from "../image-crop/crop.js";
 import ReactCrop from "react-image-crop";
@@ -41,6 +42,7 @@ function UploadPage() {
   });
   const [cropImgSrc, setCropImgSrc] = useState(null);
   const [emotions, setEmotions] = useState(["NULL", "NULL", "NULL"]);
+  const [isLoading, setIsLoading] = useState(true);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -48,6 +50,7 @@ function UploadPage() {
     isAuthenticated().then((auth) => {
       if (auth) {
         loadModel();
+        setIsLoading(false);
       } else {
         history.push("/login");
       }
@@ -92,6 +95,7 @@ function UploadPage() {
    */
   const handleDetect = () => {
     // Crop the image
+    setIsLoading(true);
     getCroppedImg(cropImgObj, crop, "upload.jpg").then((cropBlobObj) => {
       // Set the cropped image we are using.
       setCropImgSrc(window.URL.createObjectURL(cropBlobObj));
@@ -119,6 +123,7 @@ function UploadPage() {
                   addNotification(error, "danger");
                 });
 
+              setIsLoading(false);
               // Show the results
               handleShow();
             }
@@ -134,113 +139,126 @@ function UploadPage() {
 
   return (
     <>
-      {Object.keys(notification).length !== 0 && (
-        <Alert
-          className="w-100"
-          variant={notification.type}
-          onClose={removeNotification}
-          dismissible
-        >
-          {notification.message}
-        </Alert>
-      )}
-
-      <Row className="mt-3">
-        <Col lg={6}>
-          <div className="upload-container m-auto">
-            <Webcam
-              audio={false}
-              ref={webcamRef}
-              screenshotFormat="image/jpeg"
-            />
-            <Button className="mt-2 w-50" variant="primary" onClick={capture}>
-              Capture Image
-            </Button>
-          </div>
-        </Col>
-        <Col lg={6}>
-          <div className="upload-container">
-            <div className="drop-container">
-              {imgSrc ? (
-                <div className="crop-container">
-                  <ReactCrop
-                    src={imgSrc}
-                    crop={crop}
-                    onImageLoaded={onCropLoad}
-                    onChange={onCropChange}
-                  />
-                </div>
-              ) : (
-                <Dropzone
-                  onDrop={handleDrop}
-                  accept="image/*"
-                  minSize={1024}
-                  maxSize={3072000}
+      {isLoading ? (
+        <LoadingScreen />
+      ) : (
+        <>
+          {Object.keys(notification).length !== 0 && (
+            <Alert
+              className="w-100"
+              variant={notification.type}
+              onClose={removeNotification}
+              dismissible
+            >
+              {notification.message}
+            </Alert>
+          )}
+          <Row className="mt-3">
+            <Col lg={6}>
+              <div className="upload-container m-auto">
+                <Webcam
+                  audio={false}
+                  ref={webcamRef}
+                  screenshotFormat="image/jpeg"
+                />
+                <Button
+                  className="mt-2 w-50"
+                  variant="primary"
+                  onClick={capture}
                 >
-                  {({ getRootProps, getInputProps }) => (
-                    <div {...getRootProps({ className: "dropzone" })}>
-                      <input {...getInputProps()} />
-                      <p>Drag'n'drop images, or click to select files</p>
-                      <FontAwesomeIcon
-                        icon={["fas", "cloud-upload-alt"]}
-                        style={{ fontSize: "10em" }}
+                  Capture Image
+                </Button>
+              </div>
+            </Col>
+            <Col lg={6}>
+              <div className="upload-container">
+                <div className="drop-container">
+                  {imgSrc ? (
+                    <div className="crop-container">
+                      <ReactCrop
+                        src={imgSrc}
+                        crop={crop}
+                        onImageLoaded={onCropLoad}
+                        onChange={onCropChange}
                       />
                     </div>
+                  ) : (
+                    <Dropzone
+                      onDrop={handleDrop}
+                      accept="image/*"
+                      minSize={1024}
+                      maxSize={3072000}
+                    >
+                      {({ getRootProps, getInputProps }) => (
+                        <div {...getRootProps({ className: "dropzone" })}>
+                          <input {...getInputProps()} />
+                          <p>Drag'n'drop images, or click to select files</p>
+                          <FontAwesomeIcon
+                            icon={["fas", "cloud-upload-alt"]}
+                            style={{ fontSize: "10em" }}
+                          />
+                        </div>
+                      )}
+                    </Dropzone>
                   )}
-                </Dropzone>
-              )}
-            </div>
-            <input
-              type="file"
-              ref={inputFileRef}
-              onChange={onFileChange}
-              style={{ display: "none" }}
-            />
-            <Button
-              className="w-50 mt-2"
-              variant="primary"
-              onClick={handleUploadFile}
-            >
-              {imgSrc ? "Reupload" : "Upload"} file
-            </Button>
-          </div>
+                </div>
+                <input
+                  type="file"
+                  ref={inputFileRef}
+                  onChange={onFileChange}
+                  style={{ display: "none" }}
+                />
+                <Button
+                  className="w-50 mt-2"
+                  variant="primary"
+                  onClick={handleUploadFile}
+                >
+                  {imgSrc ? "Reupload" : "Upload"} file
+                </Button>
+              </div>
 
-          <Modal show={show} onHide={handleClose} size="xl">
-            <Modal.Header closeButton>
-              <Modal.Title>Emotion Detected!</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Row>
-                <Col md={6}>
-                  <ImageComp fluid src={cropImgSrc} />
-                </Col>
-                <Col className="m-auto text-center" md={6}>
-                  <h3 className="mb-0">The following emotion was detected:</h3>
-                  <h1 className="mt-0 huge">{emotions[0].emotion}</h1>
-                  <h4>{emotions[0].conf}% confidence</h4>
-                  <h3 className="mt-5">
-                    <strong>Other emotions detected:</strong>
-                  </h3>
-                  <h4>
-                    {emotions[1].emotion} - {emotions[1].conf}%
-                  </h4>
-                  <h4>
-                    {emotions[2].emotion} - {emotions[2].conf}%
-                  </h4>
-                </Col>
-              </Row>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
-                Close
+              <Modal show={show} onHide={handleClose} size="xl">
+                <Modal.Header closeButton>
+                  <Modal.Title>Emotion Detected!</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Row>
+                    <Col md={6}>
+                      <ImageComp fluid src={cropImgSrc} />
+                    </Col>
+                    <Col className="m-auto text-center" md={6}>
+                      <h3 className="mb-0">
+                        The following emotion was detected:
+                      </h3>
+                      <h1 className="mt-0 huge">{emotions[0].emotion}</h1>
+                      <h4>{emotions[0].conf}% confidence</h4>
+                      <h3 className="mt-5">
+                        <strong>Other emotions detected:</strong>
+                      </h3>
+                      <h4>
+                        {emotions[1].emotion} - {emotions[1].conf}%
+                      </h4>
+                      <h4>
+                        {emotions[2].emotion} - {emotions[2].conf}%
+                      </h4>
+                    </Col>
+                  </Row>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleClose}>
+                    Close
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+            </Col>
+            <Col className="mt-5 d-flex justify-content-center" xs={12}>
+              <Button disabled={!cropImgObj} onClick={handleDetect}>
+                Detect Emotion
               </Button>
-            </Modal.Footer>
-          </Modal>
-        </Col>
-        <Col className="mt-5 d-flex justify-content-center" xs={12}>
-          <Button onClick={handleDetect}>Detect Emotion</Button>
-        </Col>
-      </Row>
+            </Col>
+          </Row>
+        </>
+      )}
     </>
   );
 }
