@@ -18,7 +18,6 @@ import {
   where,
   query,
   getDocs,
-  orderBy,
 } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -319,14 +318,29 @@ function getResults() {
       const emotions = collection(db, "Emotions");
       const q = query(
         emotions,
-        where("uid", "==", user.uid),
-        orderBy("time", "desc")
+        where("uid", "==", user.uid)
       );
       getDocs(q)
         .then((results) => {
           results.forEach((result) => {
             resultList.push(result);
           });
+
+          // Sort the results by their timestamp (they are string-based not date-based in the database)
+          resultList.sort((doc1, doc2) => {
+
+            let doc1Time = Date.parse(doc1.data().time)
+            let doc2Time = Date.parse(doc2.data().time)
+
+            if (doc1Time < doc2Time) {
+              return 1
+            } else if (doc1Time > doc2Time) {
+              return -1
+            }
+
+            return 0
+          });
+
           resolve(resultList);
         })
         .catch((error) => {
